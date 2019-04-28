@@ -22,8 +22,16 @@ public class Makieta {
     private JButton otwórzPlikButton;
     private JButton zamknijButton;
     private JPanel panelGlowny;
+    private JList listZakupow;
+    private JLabel labelListaZakupow;
+    private JLabel labelListaProduktow;
+    private JButton zListyProdDoZakupow;
+    private JButton usunZListyProduktowButton;
+    private JButton usunZListyZakupow;
+    private JList listProduktow;
 
     public Makieta() {
+
         otwórzPlikButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -192,7 +200,10 @@ public class Makieta {
 
     }
 
+
+
     public static void main(String args[]) {
+
         JFrame frame = new JFrame("Makieta");
         frame.setContentPane(new Makieta().panelGlowny);
         frame.setVisible(true);
