@@ -1,0 +1,13 @@
+Lista produktów
+	Napoje
+		Coca-Cola
+			Biedronka
+			    Cena
+			Lidl
+		Woda
+			Biedronka
+			Lidl
+	Slodycze
+		Czekolada
+			Biedronka
+			Lidl

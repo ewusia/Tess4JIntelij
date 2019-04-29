@@ -3,8 +3,8 @@ import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.tree.*;
+import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -29,6 +29,10 @@ public class Makieta {
     private JButton usunZListyProduktowButton;
     private JButton usunZListyZakupow;
     private JList listProduktow;
+    private JTree treeProduktow;
+    private JTextField elementListyZakupow;
+    private static TreeFromTextFile tr = new TreeFromTextFile();
+
 
     public Makieta() {
 
@@ -129,7 +133,14 @@ public class Makieta {
                 System.exit(0);
             }
         });
+
+        fillDataToJTree();
     }
+    private void fillDataToJTree() {
+
+
+    }
+
     private void findPattern(String text) throws IOException {
 
         String foundPattern = null;
@@ -200,12 +211,11 @@ public class Makieta {
 
     }
 
-
-
     public static void main(String args[]) {
 
         JFrame frame = new JFrame("Makieta");
         frame.setContentPane(new Makieta().panelGlowny);
+        frame.setSize(1000, 1000);
         frame.setVisible(true);
 
     }
