@@ -3,6 +3,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -25,6 +26,7 @@ public class TreeFromTextFile {
         // Utworzy drzewo, które można wybrać jednocześnie.
         tree = new JTree(top);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        //DefaultTreeModel dtm = new DefaultTreeModel(top);
     }
 
     // ta metoda odczytuje plik i drukuje wszystkie linie na standardowe wyjście w celach testowych

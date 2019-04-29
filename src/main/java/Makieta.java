@@ -3,6 +3,8 @@ import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.event.*;
 import java.io.*;
@@ -134,10 +136,22 @@ public class Makieta {
             }
         });
 
-        fillDataToJTree();
+        //fillDataToJTree();
+        treeProduktow = new JTree();
+        treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                if (treeProduktow.isSelectionEmpty())
+                    return;
+                TreePath tp = treeProduktow.getSelectionPath();
+                DefaultMutableTreeNode defaultMutableTreeNode =
+                        (DefaultMutableTreeNode) tp.getLastPathComponent();
+                String element = defaultMutableTreeNode.getUserObject().toString();
+                elementListyZakupow.setText(element);
+            }
+        });
     }
     private void fillDataToJTree() {
-
 
     }
 
