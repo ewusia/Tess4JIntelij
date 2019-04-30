@@ -31,18 +31,25 @@ public class Makieta extends JFrame {
     private JLabel labelListaZakupow;
     private JLabel labelListaProduktow;
     private JButton zListyProdDoZakupow;
-    private JButton usunZListyProduktowButton;
     private JButton usunZListyZakupow;
     private JList listProduktow;
     private JTree treeProduktow;
     private JTextField elementListyZakupow;
-    private JLabel labelNameDodawanegoElementu;
     private JTextField textFieldDodawanyEl;
-    private JButton dodajNazwe;
+    private JButton dodajKategorie;
     private JButton usunButton;
     private JLabel labelEl;
     private JLabel labelNadPattern;
     private JLabel labelWyswietlaniePatagonu;
+    private JTextField textFieldDodajPodKat;
+    private JButton dodajPodkatgorie;
+    private JLabel labelDodajKategorie;
+    private JLabel labelDodajPodKategorie;
+    private JTextField textFieldDodajSklep;
+    private JTextField textFielddodajKat;
+    private JLabel labelDodajSklep;
+    private JButton dodajSklep;
+    private JLabel labelMessage;
     DefaultMutableTreeNode selectedNode;
     private JTree tree;
     private JLabel selectedLabel;
@@ -172,7 +179,7 @@ public class Makieta extends JFrame {
 /*        JTree model2 = createTree();
         treeProduktow = model2;*/
 
-        dodajNazwe.addActionListener(new ActionListener() {
+        dodajKategorie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
@@ -186,15 +193,59 @@ public class Makieta extends JFrame {
         usunButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                /*selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
                 if (selectedNode != null) {
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
                     parent.remove(selectedNode);
                    model.reload(parent);
+                }*/
+                labelMessage.setText("");
+                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                DefaultMutableTreeNode nowaPodKategoria = new DefaultMutableTreeNode(textFieldDodajPodKat.getText());
+                if (selectedNode.isRoot()) {
+                    labelMessage.setText("Nie mozesz skasowac galezi glownej");
+                } else {
+                    if (selectedNode != null) {
+                        model.removeNodeFromParent(selectedNode);
+                    } else {
+                        labelMessage.setText("Musisz wybrac kategorie lub podkategorie do usuniecia");
+                    }
                 }
+            }
 
-
-
+        });
+        dodajKategorie.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                labelMessage.setText("");
+                DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+                if (!textFielddodajKat.getText().trim().equals("")) {
+                    root.add(new DefaultMutableTreeNode(textFielddodajKat.getText()));
+                    model.reload();
+                } else {
+                    labelMessage.setText("Musisz wpisac podkategorie");
+                }
+            }
+        });
+        dodajPodkatgorie.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                labelMessage.setText("");
+                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                DefaultMutableTreeNode nowaPodKategoria = new DefaultMutableTreeNode(textFieldDodajPodKat.getText());
+                if (selectedNode.isRoot()) {
+                    labelMessage.setText("Musisz wybrac kategorie lub podkategorie");
+                } else {
+                    if (selectedNode != null) {
+                        if (!textFieldDodajPodKat.getText().trim().equals("")) {
+                            model.insertNodeInto(nowaPodKategoria, selectedNode, selectedNode.getChildCount());
+                        } else {
+                            labelMessage.setText("Musisz wpisac podkategorie");
+                        }
+                    } else {
+                        labelMessage.setText("Musisz wybrac kategorie");
+                    }
+                }
             }
         });
 
@@ -207,49 +258,7 @@ public class Makieta extends JFrame {
                 treeProduktow.setModel(model);
             }
         });*/
-    }
-    private JTree createTree() {
-        //create the root node
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-        //create the child nodes
-        DefaultMutableTreeNode vegetableNode = new DefaultMutableTreeNode("Vegetables");
-        vegetableNode.add(new DefaultMutableTreeNode("Capsicum"));
-        vegetableNode.add(new DefaultMutableTreeNode("Carrot"));
-        vegetableNode.add(new DefaultMutableTreeNode("Tomato"));
-        vegetableNode.add(new DefaultMutableTreeNode("Potato"));
 
-        DefaultMutableTreeNode fruitNode = new DefaultMutableTreeNode("Fruits");
-        fruitNode.add(new DefaultMutableTreeNode("Banana"));
-        fruitNode.add(new DefaultMutableTreeNode("Mango"));
-        fruitNode.add(new DefaultMutableTreeNode("Apple"));
-        fruitNode.add(new DefaultMutableTreeNode("Grapes"));
-        fruitNode.add(new DefaultMutableTreeNode("Orange"));
-        //add the child nodes to the root node
-        root.add(vegetableNode);
-        root.add(fruitNode);
-
-        //create the tree by passing in the root node
-        tree = new JTree(root);
-        //ImageIcon imageIcon = new ImageIcon(getResource("/leaf.jpg"));
-        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
-       // renderer.setLeafIcon(imageIcon);
-
-        tree.setCellRenderer(renderer);
-        tree.setShowsRootHandles(true);
-        tree.setRootVisible(false);
-        add(new JScrollPane(tree));
-
-        selectedLabel = new JLabel();
-        add(selectedLabel, BorderLayout.SOUTH);
-        tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-                selectedLabel.setText(selectedNode.getUserObject().toString());
-            }
-        });
-
-        return tree;
     }
 
     private DefaultTreeModel fillDataToJTree() {
