@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.awt.BorderLayout;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
@@ -43,15 +43,19 @@ public class Makieta extends JFrame {
     private JLabel labelEl;
     private JLabel labelNadPattern;
     private JLabel labelWyswietlaniePatagonu;
-    private static TreeFromTextFile tr = new TreeFromTextFile();
     DefaultMutableTreeNode selectedNode;
     private JTree tree;
     private JLabel selectedLabel;
+    private static TreeFromTextFile tr = new TreeFromTextFile();
+
 
     public Makieta() {
 
-        fillDataToJTree();
+        //fillDataToJTree();
         //createTree();
+        JTree t = tr.getTree();
+        DefaultTreeModel model = (DefaultTreeModel) t.getModel();
+        treeProduktow.setModel(model);
 
         otwórzPlikButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -151,8 +155,6 @@ public class Makieta extends JFrame {
             }
         });
 
-
-        //treeProduktow = new JTree();
         treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
@@ -166,7 +168,7 @@ public class Makieta extends JFrame {
             }
         });
 
-        DefaultTreeModel model = fillDataToJTree();
+        //DefaultTreeModel model = fillDataToJTree();
 /*        JTree model2 = createTree();
         treeProduktow = model2;*/
 
@@ -188,7 +190,7 @@ public class Makieta extends JFrame {
                 if (selectedNode != null) {
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
                     parent.remove(selectedNode);
-                    model.reload(parent);
+                   model.reload(parent);
                 }
 
 
@@ -196,6 +198,15 @@ public class Makieta extends JFrame {
             }
         });
 
+
+/*        treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                JTree t = tr.getTree();//(JTree) e.getSource();
+                DefaultTreeModel model = (DefaultTreeModel) t.getModel();
+                treeProduktow.setModel(model);
+            }
+        });*/
     }
     private JTree createTree() {
         //create the root node
