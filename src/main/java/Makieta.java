@@ -161,8 +161,8 @@ public class Makieta {
             }
         });
 
-        /*DefaultTreeModel defaultTreeModel = model;
-        defaultTreeModel = (DefaultTreeModel) treeProduktow.getModel();
+        DefaultTreeModel model = fillDataToJTree();
+        //model = (DefaultTreeModel) treeProduktow.getModel();
 
         dodajNazwe.addActionListener(new ActionListener() {
             @Override
@@ -188,10 +188,10 @@ public class Makieta {
 
 
             }
-        });*/
+        });
 
     }
-    private void fillDataToJTree() {
+    private DefaultTreeModel fillDataToJTree() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
         DefaultMutableTreeNode a = new DefaultMutableTreeNode("A");
         DefaultMutableTreeNode aa = new DefaultMutableTreeNode("AA");
@@ -201,6 +201,7 @@ public class Makieta {
         root.add(a);
         DefaultTreeModel dtm = new DefaultTreeModel(root);
         this.treeProduktow.setModel(dtm);
+        return dtm;
     }
 
     private void findPattern(String text) throws IOException {
