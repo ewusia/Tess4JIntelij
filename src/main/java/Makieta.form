@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Makieta">
-  <grid id="27dc6" binding="panelGlowny" layout-manager="GridLayoutManager" row-count="8" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="panelGlowny" layout-manager="GridLayoutManager" row-count="7" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
       <xy x="21" y="20" width="1011" height="533"/>
@@ -10,12 +10,12 @@
     <children>
       <hspacer id="440e3">
         <constraints>
-          <grid row="5" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
       </hspacer>
       <component id="ada60" class="javax.swing.JTextArea" binding="jTextAreaListaZakupow">
         <constraints>
-          <grid row="0" column="5" row-span="3" col-span="1" vsize-policy="6" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
+          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="4" fill="2" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
@@ -25,23 +25,15 @@
       </component>
       <component id="e0460" class="javax.swing.JButton" binding="wczytajParagonButton" default-binding="true">
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Wczytaj paragon"/>
         </properties>
       </component>
-      <component id="c6b1f" class="javax.swing.JButton" binding="zapiszPlikButton" default-binding="true">
-        <constraints>
-          <grid row="7" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Zapisz plik"/>
-        </properties>
-      </component>
       <component id="20753" class="javax.swing.JButton" binding="otwórzPlikButton" default-binding="true">
         <constraints>
-          <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Otwórz plik"/>
@@ -49,81 +41,20 @@
       </component>
       <component id="43956" class="javax.swing.JButton" binding="zamknijButton" default-binding="true">
         <constraints>
-          <grid row="7" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Zamknij"/>
         </properties>
       </component>
-      <component id="30e8a" class="javax.swing.JTextArea" binding="jTextAreaListaProduktow">
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="6" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-        </constraints>
-        <properties>
-          <text value=""/>
-        </properties>
-      </component>
-      <component id="b3721" class="javax.swing.JList" binding="listZakupow">
-        <constraints>
-          <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="4" fill="2" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="67423" class="javax.swing.JLabel" binding="labelListaProduktow">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Lista produktow"/>
-        </properties>
-      </component>
-      <component id="4c34e" class="javax.swing.JLabel" binding="labelListaZakupow">
-        <constraints>
-          <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Lista zakupow"/>
-        </properties>
-      </component>
-      <component id="766f1" class="javax.swing.JButton" binding="zListyProdDoZakupow">
-        <constraints>
-          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <actionCommand value="zListyProdDoZakupow"/>
-          <text value="&gt;&gt;"/>
-        </properties>
-      </component>
-      <component id="6da72" class="javax.swing.JButton" binding="usunZListyProduktowButton" default-binding="true">
+      <component id="9a077" class="javax.swing.JButton" binding="usunZListyZakupow">
         <constraints>
           <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <actionCommand value="usunZListyProduktowButton"/>
           <label value="-"/>
           <text value="-"/>
         </properties>
-      </component>
-      <component id="9a077" class="javax.swing.JButton" binding="usunZListyZakupow">
-        <constraints>
-          <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <label value="-"/>
-          <text value="-"/>
-        </properties>
-      </component>
-      <component id="e140f" class="javax.swing.JList" binding="listProduktow">
-        <constraints>
-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-        </constraints>
-        <properties/>
       </component>
       <component id="7e9ac" class="javax.swing.JTree" binding="treeProduktow">
         <constraints>
@@ -135,11 +66,89 @@
       </component>
       <component id="67867" class="javax.swing.JTextField" binding="elementListyZakupow">
         <constraints>
-          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
         <properties/>
+      </component>
+      <component id="c6b1f" class="javax.swing.JButton" binding="zapiszPlikButton" default-binding="true">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Zapisz plik"/>
+        </properties>
+      </component>
+      <component id="ff0b2" class="javax.swing.JLabel" binding="labelWyswietlaniePatagonu">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Tresc paragonu"/>
+        </properties>
+      </component>
+      <component id="51b17" class="javax.swing.JLabel" binding="labelNadPattern">
+        <constraints>
+          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Czesc paragonu dotyczaca produktow"/>
+        </properties>
+      </component>
+      <component id="30e8a" class="javax.swing.JTextArea" binding="jTextAreaListaProduktow">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="6" hsize-policy="6" anchor="8" fill="2" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="4c34e" class="javax.swing.JLabel" binding="labelListaZakupow">
+        <constraints>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Lista zakupow"/>
+        </properties>
+      </component>
+      <component id="67423" class="javax.swing.JLabel" binding="labelListaProduktow">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Lista produktow"/>
+        </properties>
+      </component>
+      <component id="b3721" class="javax.swing.JList" binding="listZakupow">
+        <constraints>
+          <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="6da72" class="javax.swing.JButton" binding="usunZListyProduktowButton" default-binding="true">
+        <constraints>
+          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <actionCommand value="usunZListyProduktowButton"/>
+          <label value="-"/>
+          <text value="-"/>
+        </properties>
+      </component>
+      <component id="766f1" class="javax.swing.JButton" binding="zListyProdDoZakupow">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <actionCommand value="zListyProdDoZakupow"/>
+          <label value="&gt;"/>
+          <text value="&gt;"/>
+        </properties>
       </component>
     </children>
   </grid>

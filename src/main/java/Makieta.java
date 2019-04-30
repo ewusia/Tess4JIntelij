@@ -136,7 +136,7 @@ public class Makieta {
             }
         });
 
-        //fillDataToJTree();
+/*        //fillDataToJTree();
         treeProduktow = new JTree();
         treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
@@ -149,11 +149,11 @@ public class Makieta {
                 String element = defaultMutableTreeNode.getUserObject().toString();
                 elementListyZakupow.setText(element);
             }
-        });
+        });*/
     }
-    private void fillDataToJTree() {
+/*    private void fillDataToJTree() {
 
-    }
+    }*/
 
     private void findPattern(String text) throws IOException {
 
