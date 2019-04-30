@@ -164,7 +164,7 @@ public class Makieta extends JFrame {
                 DefaultMutableTreeNode defaultMutableTreeNode =
                         (DefaultMutableTreeNode) tp.getLastPathComponent();
                 String element = defaultMutableTreeNode.getUserObject().toString();
-                elementListyZakupow.setText(element);
+                elementListyZakupow.setText(element.trim());
             }
         });
 
