@@ -33,10 +33,20 @@ public class Makieta {
     private JList listProduktow;
     private JTree treeProduktow;
     private JTextField elementListyZakupow;
+    private JLabel labelNameDodawanegoElementu;
+    private JTextField textFieldDodawanyEl;
+    private JButton dodajNazwe;
+    private JButton usunButton;
+    private JLabel labelEl;
+    private JLabel labelNadPattern;
+    private JLabel labelWyswietlaniePatagonu;
     private static TreeFromTextFile tr = new TreeFromTextFile();
+    DefaultMutableTreeNode selectedNode;
 
 
     public Makieta() {
+
+        fillDataToJTree();
 
         otwórzPlikButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -136,8 +146,8 @@ public class Makieta {
             }
         });
 
-/*        //fillDataToJTree();
-        treeProduktow = new JTree();
+
+        //treeProduktow = new JTree();
         treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
@@ -149,11 +159,49 @@ public class Makieta {
                 String element = defaultMutableTreeNode.getUserObject().toString();
                 elementListyZakupow.setText(element);
             }
-        });*/
-    }
-/*    private void fillDataToJTree() {
+        });
 
-    }*/
+        /*DefaultTreeModel defaultTreeModel = model;
+        defaultTreeModel = (DefaultTreeModel) treeProduktow.getModel();
+
+        dodajNazwe.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                if (selectedNode !=null) {
+                    selectedNode.insert(new DefaultMutableTreeNode(textFieldDodawanyEl.getText()), selectedNode.getIndex(selectedNode.getLastChild()));
+                    model.reload(selectedNode);
+                }
+                textFieldDodawanyEl.setText("");
+            }
+        });
+        usunButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                if (selectedNode != null) {
+                    DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
+                    parent.remove(selectedNode);
+                    model.reload(parent);
+                }
+
+
+
+            }
+        });*/
+
+    }
+    private void fillDataToJTree() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+        DefaultMutableTreeNode a = new DefaultMutableTreeNode("A");
+        DefaultMutableTreeNode aa = new DefaultMutableTreeNode("AA");
+        DefaultMutableTreeNode ab = new DefaultMutableTreeNode("AB");
+        a.add(aa);
+        a.add(ab);
+        root.add(a);
+        DefaultTreeModel dtm = new DefaultTreeModel(root);
+        this.treeProduktow.setModel(dtm);
+    }
 
     private void findPattern(String text) throws IOException {
 
