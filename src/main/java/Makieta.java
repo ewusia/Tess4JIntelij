@@ -13,8 +13,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.awt.BorderLayout;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
-public class Makieta {
+public class Makieta extends JFrame {
 
 
     private JTextArea jTextAreaListaProduktow;
@@ -42,11 +45,13 @@ public class Makieta {
     private JLabel labelWyswietlaniePatagonu;
     private static TreeFromTextFile tr = new TreeFromTextFile();
     DefaultMutableTreeNode selectedNode;
-
+    private JTree tree;
+    private JLabel selectedLabel;
 
     public Makieta() {
 
         fillDataToJTree();
+        //createTree();
 
         otwórzPlikButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -162,7 +167,8 @@ public class Makieta {
         });
 
         DefaultTreeModel model = fillDataToJTree();
-        //model = (DefaultTreeModel) treeProduktow.getModel();
+/*        JTree model2 = createTree();
+        treeProduktow = model2;*/
 
         dodajNazwe.addActionListener(new ActionListener() {
             @Override
@@ -191,15 +197,76 @@ public class Makieta {
         });
 
     }
+    private JTree createTree() {
+        //create the root node
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
+        //create the child nodes
+        DefaultMutableTreeNode vegetableNode = new DefaultMutableTreeNode("Vegetables");
+        vegetableNode.add(new DefaultMutableTreeNode("Capsicum"));
+        vegetableNode.add(new DefaultMutableTreeNode("Carrot"));
+        vegetableNode.add(new DefaultMutableTreeNode("Tomato"));
+        vegetableNode.add(new DefaultMutableTreeNode("Potato"));
+
+        DefaultMutableTreeNode fruitNode = new DefaultMutableTreeNode("Fruits");
+        fruitNode.add(new DefaultMutableTreeNode("Banana"));
+        fruitNode.add(new DefaultMutableTreeNode("Mango"));
+        fruitNode.add(new DefaultMutableTreeNode("Apple"));
+        fruitNode.add(new DefaultMutableTreeNode("Grapes"));
+        fruitNode.add(new DefaultMutableTreeNode("Orange"));
+        //add the child nodes to the root node
+        root.add(vegetableNode);
+        root.add(fruitNode);
+
+        //create the tree by passing in the root node
+        tree = new JTree(root);
+        //ImageIcon imageIcon = new ImageIcon(getResource("/leaf.jpg"));
+        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+       // renderer.setLeafIcon(imageIcon);
+
+        tree.setCellRenderer(renderer);
+        tree.setShowsRootHandles(true);
+        tree.setRootVisible(false);
+        add(new JScrollPane(tree));
+
+        selectedLabel = new JLabel();
+        add(selectedLabel, BorderLayout.SOUTH);
+        tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+                selectedLabel.setText(selectedNode.getUserObject().toString());
+            }
+        });
+
+        return tree;
+    }
+
     private DefaultTreeModel fillDataToJTree() {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
-        DefaultMutableTreeNode a = new DefaultMutableTreeNode("A");
-        DefaultMutableTreeNode aa = new DefaultMutableTreeNode("AA");
-        DefaultMutableTreeNode ab = new DefaultMutableTreeNode("AB");
-        a.add(aa);
-        a.add(ab);
-        root.add(a);
-        DefaultTreeModel dtm = new DefaultTreeModel(root);
+        DefaultMutableTreeNode listaProduktow = new DefaultMutableTreeNode("Lista produktow");
+        DefaultMutableTreeNode napoj = new DefaultMutableTreeNode("Napoj");
+        DefaultMutableTreeNode woda = new DefaultMutableTreeNode("Woda");
+        DefaultMutableTreeNode cocaCola = new DefaultMutableTreeNode("Coca-cola");
+        DefaultMutableTreeNode biedronka = new DefaultMutableTreeNode("Biedronka");
+        DefaultMutableTreeNode lidl = new DefaultMutableTreeNode("Lidl");
+        DefaultMutableTreeNode cena = new DefaultMutableTreeNode("cena");
+        listaProduktow.add(napoj);
+        napoj.add(cocaCola);
+        napoj.add(woda);
+        cocaCola.add(biedronka);
+        biedronka.add(cena);
+        lidl.add(cena);
+        cocaCola.add(lidl);
+        woda.add(lidl);
+        woda.add(lidl);
+        DefaultMutableTreeNode slodycze = new DefaultMutableTreeNode("Slodycze");
+        DefaultMutableTreeNode czekolada = new DefaultMutableTreeNode("Czekolada");
+        listaProduktow.add(slodycze);
+        slodycze.add(czekolada);
+        czekolada.add(biedronka);
+        biedronka.add(cena);
+        czekolada.add(lidl);
+        lidl.add(cena);
+        DefaultTreeModel dtm = new DefaultTreeModel(listaProduktow);
         this.treeProduktow.setModel(dtm);
         return dtm;
     }
