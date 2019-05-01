@@ -5,6 +5,8 @@ import org.apache.commons.io.FileUtils;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -61,8 +63,13 @@ public class Makieta extends JFrame {
         //fillDataToJTree();
         //createTree();
         JTree t = tr.getTree();
+/*
+        JScrollPane scrollTree = new JScrollPane(t);
+        //scrollTree.setViewportView(t);*/
+
         DefaultTreeModel model = (DefaultTreeModel) t.getModel();
         treeProduktow.setModel(model);
+/*        add(scrollTree);*/
 
         otwórzPlikButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -165,6 +172,12 @@ public class Makieta extends JFrame {
         treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
+
+/*                JScrollPane pane = new JScrollPane(t);
+                pane.setPreferredSize(new Dimension(200, 400));
+
+                getContentPane().add(pane);*/
+
                 if (treeProduktow.isSelectionEmpty())
                     return;
                 TreePath tp = treeProduktow.getSelectionPath();
@@ -218,12 +231,12 @@ public class Makieta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
-                DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+                DefaultMutableTreeNode galazGlowna = (DefaultMutableTreeNode) model.getRoot();
                 if (!textFielddodajKat.getText().trim().equals("")) {
-                    root.add(new DefaultMutableTreeNode(textFielddodajKat.getText()));
+                    galazGlowna.add(new DefaultMutableTreeNode(textFielddodajKat.getText()));
                     model.reload();
                 } else {
-                    labelMessage.setText("Musisz wpisac podkategorie");
+                    labelMessage.setText("Musisz wpisac kategorie");
                 }
             }
         });
@@ -231,14 +244,42 @@ public class Makieta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                DefaultMutableTreeNode nowaPodKategoria = new DefaultMutableTreeNode(textFieldDodajPodKat.getText());
-                if (selectedNode.isRoot()) {
+                DefaultMutableTreeNode wybranyWezel = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                DefaultMutableTreeNode nowaNazwaProduktu = new DefaultMutableTreeNode(textFieldDodajPodKat.getText());
+               // boolean leaf = wybranyWezel.isLeaf();
+                if (wybranyWezel == null) {
+                    labelMessage.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
+                } else {
+                    if (!wybranyWezel.isRoot() && !wybranyWezel.isLeaf()) { // todo dodac by nie dopisywal nizej
+                        int licznik = wybranyWezel.getFirstChild().getChildCount();
+                        if (licznik == 2) {
+                            if (!textFieldDodajPodKat.getText().trim().equals("")) {
+                                model.insertNodeInto(nowaNazwaProduktu, wybranyWezel, wybranyWezel.getChildCount());
+                            } else {
+                                labelMessage.setText("Musisz wpisac nazwe produktu");
+                            }
+                        } else {
+                            labelMessage.setText("Nie mozna dodac produktu do produktu ani sklepu");
+                        }
+                    } else {
+                        labelMessage.setText("Musisz wybrac kategorie");
+                    }
+                }
+            }
+        });
+        dodajSklep.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                labelMessage.setText("");
+                DefaultMutableTreeNode wybranyWezel = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                DefaultMutableTreeNode nowySklep = new DefaultMutableTreeNode(textFieldDodajSklep.getText());
+
+                if (wybranyWezel.isRoot()/* || wybranyWezel.isNodeChild(firstChild)*/) {
                     labelMessage.setText("Musisz wybrac kategorie lub podkategorie");
                 } else {
-                    if (selectedNode != null) {
-                        if (!textFieldDodajPodKat.getText().trim().equals("")) {
-                            model.insertNodeInto(nowaPodKategoria, selectedNode, selectedNode.getChildCount());
+                    if (wybranyWezel != null) {
+                        if (!textFieldDodajSklep.getText().trim().equals("")) {
+                            model.insertNodeInto(nowySklep, wybranyWezel, wybranyWezel.getChildCount());
                         } else {
                             labelMessage.setText("Musisz wpisac podkategorie");
                         }
@@ -248,17 +289,6 @@ public class Makieta extends JFrame {
                 }
             }
         });
-
-
-/*        treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                JTree t = tr.getTree();//(JTree) e.getSource();
-                DefaultTreeModel model = (DefaultTreeModel) t.getModel();
-                treeProduktow.setModel(model);
-            }
-        });*/
-
     }
 
     private DefaultTreeModel fillDataToJTree() {

@@ -1,13 +1,13 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
-public class TreeFromTextFile {
+public class TreeFromTextFile extends JFrame{
 
     private BufferedReader in;
     private LineNumberReader ln;
@@ -26,6 +26,11 @@ public class TreeFromTextFile {
         // Utworzy drzewo, które można wybrać jednocześnie.
         tree = new JTree(top);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+       /* JScrollPane scroll = new JScrollPane(tree);
+        this.add(scroll);*/
+/*        JScrollPane scrollTree = new JScrollPane(tree);
+        scrollTree.setViewportView(tree);*/
     }
 
     // ta metoda odczytuje plik i drukuje wszystkie linie na standardowe wyjście w celach testowych
