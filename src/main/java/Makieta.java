@@ -246,11 +246,10 @@ public class Makieta extends JFrame {
                 labelMessage.setText("");
                 DefaultMutableTreeNode wybranyWezel = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
                 DefaultMutableTreeNode nowaNazwaProduktu = new DefaultMutableTreeNode(textFieldDodajPodKat.getText());
-               // boolean leaf = wybranyWezel.isLeaf();
                 if (wybranyWezel == null) {
                     labelMessage.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
                 } else {
-                    if (!wybranyWezel.isRoot() && !wybranyWezel.isLeaf()) { // todo dodac by nie dopisywal nizej
+                    if (!wybranyWezel.isRoot() && !wybranyWezel.isLeaf()) {
                         int licznik = wybranyWezel.getFirstChild().getChildCount();
                         if (licznik == 2) {
                             if (!textFieldDodajPodKat.getText().trim().equals("")) {
@@ -272,19 +271,23 @@ public class Makieta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
                 DefaultMutableTreeNode wybranyWezel = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                DefaultMutableTreeNode nowySklep = new DefaultMutableTreeNode(textFieldDodajSklep.getText());
-
-                if (wybranyWezel.isRoot()/* || wybranyWezel.isNodeChild(firstChild)*/) {
-                    labelMessage.setText("Musisz wybrac kategorie lub podkategorie");
+                DefaultMutableTreeNode nowaNazwaSklepu = new DefaultMutableTreeNode(textFieldDodajSklep.getText());
+                if (wybranyWezel == null) {
+                    labelMessage.setText("Musisz wybrac produkt, a nastepnie wpisac nazwe sklepu");
                 } else {
-                    if (wybranyWezel != null) {
-                        if (!textFieldDodajSklep.getText().trim().equals("")) {
-                            model.insertNodeInto(nowySklep, wybranyWezel, wybranyWezel.getChildCount());
+                    if (!wybranyWezel.isRoot() && !wybranyWezel.isLeaf()) {
+                        int licznik = wybranyWezel.getFirstChild().getChildCount();
+                        if (licznik == 1) {
+                            if (!textFieldDodajSklep.getText().trim().equals("")) {
+                                model.insertNodeInto(nowaNazwaSklepu, wybranyWezel, wybranyWezel.getChildCount());
+                            } else {
+                                labelMessage.setText("Musisz wpisac nazwe sklepu");
+                            }
                         } else {
-                            labelMessage.setText("Musisz wpisac podkategorie");
+                            labelMessage.setText("Nie mozna dodac sklepu do kategorii ani sklepu");
                         }
                     } else {
-                        labelMessage.setText("Musisz wybrac kategorie");
+                        labelMessage.setText("Musisz wybrac produkt");
                     }
                 }
             }
