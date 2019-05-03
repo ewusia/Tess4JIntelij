@@ -246,17 +246,18 @@ public class Makieta extends JFrame {
                 if (wybranyWezel == null) {
                     labelMessage.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
                 } else {
-                    if (!wybranyWezel.isRoot() /*&& !wybranyWezel.isLeaf()*/) {
-/*                        int licznik = wybranyWezel.getFirstChild().getChildCount();
-                        if (licznik == 2) {*/
+                    if (!wybranyWezel.isRoot()) {
+                        TreeNode parent = wybranyWezel.getParent();
+                        boolean equals = parent.equals(wybranyWezel.getRoot());
+                        if (equals) {
                             if (!textFieldDodajPodKat.getText().trim().equals("")) {
                                 model.insertNodeInto(nowaNazwaProduktu, wybranyWezel, wybranyWezel.getChildCount());
                             } else {
                                 labelMessage.setText("Musisz wpisac nazwe produktu");
                             }
-                        /*} else {
+                        } else {
                             labelMessage.setText("Nie mozna dodac produktu do produktu ani sklepu");
-                        }*/
+                        }
                     } else {
                         labelMessage.setText("Musisz wybrac kategorie");
                     }
@@ -272,9 +273,9 @@ public class Makieta extends JFrame {
                 if (wybranyWezel == null) {
                     labelMessage.setText("Musisz wybrac produkt, a nastepnie wpisac nazwe sklepu");
                 } else {
-                    if (!wybranyWezel.isRoot() && !wybranyWezel.isLeaf()) {
-                        int licznik = wybranyWezel.getFirstChild().getChildCount();
-                        if (licznik == 1) {
+                    if (!wybranyWezel.isRoot()) {
+                        int poziom = wybranyWezel.getLevel();
+                        if (poziom == 2) {
                             if (!textFieldDodajSklep.getText().trim().equals("")) {
                                 model.insertNodeInto(nowaNazwaSklepu, wybranyWezel, wybranyWezel.getChildCount());
                             } else {
