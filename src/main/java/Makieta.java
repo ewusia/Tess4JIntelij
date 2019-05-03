@@ -47,11 +47,14 @@ public class Makieta extends JFrame {
     private JTextField textFielddodajKat;
     private JLabel labelDodajSklep;
     private JButton dodajSklep;
+    private JButton buttonEdytujElement;
     private JLabel labelMessage;
     DefaultMutableTreeNode selectedNode;
     private JTree tree;
     private JLabel selectedLabel;
     private static DrzewoZPlikuTekstowego tr = new DrzewoZPlikuTekstowego();
+    private String encoding = "UTF-8";
+    String bazaProduktow = "baza.txt";
 
 
     public Makieta() {
@@ -169,6 +172,10 @@ public class Makieta extends JFrame {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
 
+/*                JScrollPane scrollpane = new JScrollPane (treeProduktow);
+                add(scrollpane, "Center");*/
+
+
 /*                JScrollPane pane = new JScrollPane(t);
                 pane.setPreferredSize(new Dimension(200, 400));
 
@@ -262,6 +269,11 @@ public class Makieta extends JFrame {
                         labelMessage.setText("Musisz wybrac kategorie");
                     }
                 }
+                try {
+                    zapisDrzewaDoPliku(t);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         dodajSklep.addActionListener(new ActionListener() {
@@ -288,6 +300,15 @@ public class Makieta extends JFrame {
                         labelMessage.setText("Musisz wybrac produkt");
                     }
                 }
+            }
+        });
+        buttonEdytujElement.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
+                wybranaGalaz.setUserObject(elementListyZakupow.getText());
+                DefaultTreeModel model = (DefaultTreeModel) treeProduktow.getModel();
+                model.reload();
             }
         });
     }
@@ -345,6 +366,28 @@ public class Makieta extends JFrame {
         FileWriter fw = new FileWriter("paragon.txt");
         fw.write(fullText);
         fw.close();
+    }
+
+    private void zapisDrzewaDoPliku(JTree treeProduktow) throws IOException {
+        //new BufferedWriter(new OutputStreamWriter(bazaProduktow, encoding));
+
+        try{
+            FileOutputStream file= new FileOutputStream("baza.txt");
+            Writer       outputStreamWriter = new OutputStreamWriter(file);
+
+            outputStreamWriter.write(String.valueOf(treeProduktow));
+
+            outputStreamWriter.close();
+        }
+        catch(Exception e){}
+        /*//Deserialization
+        JTree tree2=null;
+        try{
+            FileInputStream file= new FileInputStream("/home/alain/Bureau/serialisation.txt");
+            ObjectInputStream in = new ObjectInputStream(file);
+            tree2 = (JTree) in.readObject();
+        }
+        catch(Exception e){}*/
     }
 
     private void czytaniePliku() throws FileNotFoundException, IOException {
