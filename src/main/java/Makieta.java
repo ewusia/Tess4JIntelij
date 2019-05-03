@@ -5,10 +5,7 @@ import org.apache.commons.io.FileUtils;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import javax.swing.tree.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -17,7 +14,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 
 public class Makieta extends JFrame {
 
@@ -55,7 +51,7 @@ public class Makieta extends JFrame {
     DefaultMutableTreeNode selectedNode;
     private JTree tree;
     private JLabel selectedLabel;
-    private static TreeFromTextFile tr = new TreeFromTextFile();
+    private static DrzewoZPlikuTekstowego tr = new DrzewoZPlikuTekstowego();
 
 
     public Makieta() {
@@ -192,17 +188,6 @@ public class Makieta extends JFrame {
 /*        JTree model2 = createTree();
         treeProduktow = model2;*/
 
-        dodajKategorie.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                if (selectedNode !=null) {
-                    selectedNode.insert(new DefaultMutableTreeNode(textFieldDodawanyEl.getText()), selectedNode.getIndex(selectedNode.getLastChild()));
-                    model.reload(selectedNode);
-                }
-                textFieldDodawanyEl.setText("");
-            }
-        });
         usunButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -240,6 +225,18 @@ public class Makieta extends JFrame {
                 }
             }
         });
+
+        /*dodajKategorie.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                if (selectedNode !=null) {
+                    selectedNode.insert(new DefaultMutableTreeNode(textFieldDodawanyEl.getText()), selectedNode.getIndex(selectedNode.getLastChild()));
+                    model.reload(selectedNode);
+                }
+                textFieldDodawanyEl.setText("");
+            }
+        });*/
         dodajPodkatgorie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -249,17 +246,17 @@ public class Makieta extends JFrame {
                 if (wybranyWezel == null) {
                     labelMessage.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
                 } else {
-                    if (!wybranyWezel.isRoot() && !wybranyWezel.isLeaf()) {
-                        int licznik = wybranyWezel.getFirstChild().getChildCount();
-                        if (licznik == 2) {
+                    if (!wybranyWezel.isRoot() /*&& !wybranyWezel.isLeaf()*/) {
+/*                        int licznik = wybranyWezel.getFirstChild().getChildCount();
+                        if (licznik == 2) {*/
                             if (!textFieldDodajPodKat.getText().trim().equals("")) {
                                 model.insertNodeInto(nowaNazwaProduktu, wybranyWezel, wybranyWezel.getChildCount());
                             } else {
                                 labelMessage.setText("Musisz wpisac nazwe produktu");
                             }
-                        } else {
+                        /*} else {
                             labelMessage.setText("Nie mozna dodac produktu do produktu ani sklepu");
-                        }
+                        }*/
                     } else {
                         labelMessage.setText("Musisz wybrac kategorie");
                     }
@@ -292,36 +289,6 @@ public class Makieta extends JFrame {
                 }
             }
         });
-    }
-
-    private DefaultTreeModel fillDataToJTree() {
-        DefaultMutableTreeNode listaProduktow = new DefaultMutableTreeNode("Lista produktow");
-        DefaultMutableTreeNode napoj = new DefaultMutableTreeNode("Napoj");
-        DefaultMutableTreeNode woda = new DefaultMutableTreeNode("Woda");
-        DefaultMutableTreeNode cocaCola = new DefaultMutableTreeNode("Coca-cola");
-        DefaultMutableTreeNode biedronka = new DefaultMutableTreeNode("Biedronka");
-        DefaultMutableTreeNode lidl = new DefaultMutableTreeNode("Lidl");
-        DefaultMutableTreeNode cena = new DefaultMutableTreeNode("cena");
-        listaProduktow.add(napoj);
-        napoj.add(cocaCola);
-        napoj.add(woda);
-        cocaCola.add(biedronka);
-        biedronka.add(cena);
-        lidl.add(cena);
-        cocaCola.add(lidl);
-        woda.add(lidl);
-        woda.add(lidl);
-        DefaultMutableTreeNode slodycze = new DefaultMutableTreeNode("Slodycze");
-        DefaultMutableTreeNode czekolada = new DefaultMutableTreeNode("Czekolada");
-        listaProduktow.add(slodycze);
-        slodycze.add(czekolada);
-        czekolada.add(biedronka);
-        biedronka.add(cena);
-        czekolada.add(lidl);
-        lidl.add(cena);
-        DefaultTreeModel dtm = new DefaultTreeModel(listaProduktow);
-        this.treeProduktow.setModel(dtm);
-        return dtm;
     }
 
     private void findPattern(String text) throws IOException {

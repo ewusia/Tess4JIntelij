@@ -7,7 +7,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
-public class TreeFromTextFile extends JFrame{
+public class DrzewoZPlikuTekstowego extends JFrame{
 
     private BufferedReader in;
     private LineNumberReader ln;
@@ -18,7 +18,7 @@ public class TreeFromTextFile extends JFrame{
     private DefaultMutableTreeNode top;
     private JTree tree;
 
-    public TreeFromTextFile() {
+    public DrzewoZPlikuTekstowego() {
         getRootNode();
         top = new DefaultMutableTreeNode(root);
         createNodes(top);

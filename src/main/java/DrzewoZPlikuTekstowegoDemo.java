@@ -7,9 +7,9 @@ import javax.swing.JTree;
 /**
  * @author engineervix
  */
-public class TreeFromTextFileDemo {
+public class DrzewoZPlikuTekstowegoDemo {
 
-    private static TreeFromTextFile tr = new TreeFromTextFile();
+    private static DrzewoZPlikuTekstowego tr = new DrzewoZPlikuTekstowego();
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Demo | Creating JTree From File.txt");
