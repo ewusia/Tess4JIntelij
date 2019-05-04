@@ -32,15 +32,15 @@ public class Makieta extends JFrame {
     private JButton usunZListyZakupow;
     private JList listProduktow;
     private JTree treeProduktow;
-    private JTextField elementListyZakupow;
+    private JTextField textFieldElementListyZakupow;
     private JTextField textFieldDodawanyEl;
     private JButton dodajKategorie;
     private JButton usunButton;
     private JLabel labelEl;
     private JLabel labelNadPattern;
     private JLabel labelWyswietlaniePatagonu;
-    private JTextField textFieldDodajPodKat;
-    private JButton dodajPodkatgorie;
+    private JTextField textFieldDodajProdukt;
+    private JButton dodajProdukt;
     private JLabel labelDodajKategorie;
     private JLabel labelDodajPodKategorie;
     private JTextField textFieldDodajSklep;
@@ -48,6 +48,13 @@ public class Makieta extends JFrame {
     private JLabel labelDodajSklep;
     private JButton dodajSklep;
     private JButton buttonEdytujElement;
+    private JLabel labelSklep;
+    private JLabel labelCena;
+    private JLabel labelProdukt;
+    private JLabel labelIlosc;
+    private JButton buttonEdytujProduktZListyZakupow;
+    private JButton zapiszListeDoPlikuButton;
+    private JTextArea textAreaSuma;
     private JLabel labelMessage;
     DefaultMutableTreeNode selectedNode;
     private JTree tree;
@@ -55,6 +62,7 @@ public class Makieta extends JFrame {
     private static DrzewoZPlikuTekstowego tr = new DrzewoZPlikuTekstowego();
     private String encoding = "UTF-8";
     String bazaProduktow = "baza.txt";
+    private JScrollPane scrollPaneTree;
 
 
     public Makieta() {
@@ -62,13 +70,12 @@ public class Makieta extends JFrame {
         //fillDataToJTree();
         //createTree();
         JTree t = tr.getTree();
-/*
-        JScrollPane scrollTree = new JScrollPane(t);
-        //scrollTree.setViewportView(t);*/
 
         DefaultTreeModel model = (DefaultTreeModel) t.getModel();
         treeProduktow.setModel(model);
-/*        add(scrollTree);*/
+
+/*        JTree tree = new JTree(model);
+        treeProduktow.add(new JScrollPane(tree));*/
 
         otwórzPlikButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -172,14 +179,11 @@ public class Makieta extends JFrame {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
 
-/*                JScrollPane scrollpane = new JScrollPane (treeProduktow);
-                add(scrollpane, "Center");*/
-
-
-/*                JScrollPane pane = new JScrollPane(t);
-                pane.setPreferredSize(new Dimension(200, 400));
-
-                getContentPane().add(pane);*/
+                //JTree t = tr.getTree();
+                //DefaultTreeModel model = (DefaultTreeModel) t.getModel();
+                //treeProduktow.setModel(model);
+                /*JScrollPane scrollTree = new JScrollPane(t, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                add(scrollTree);*/
 
                 if (treeProduktow.isSelectionEmpty())
                     return;
@@ -187,7 +191,7 @@ public class Makieta extends JFrame {
                 DefaultMutableTreeNode defaultMutableTreeNode =
                         (DefaultMutableTreeNode) tp.getLastPathComponent();
                 String element = defaultMutableTreeNode.getUserObject().toString();
-                elementListyZakupow.setText(element.trim());
+                textFieldElementListyZakupow.setText(element.trim());
             }
         });
 
@@ -206,7 +210,7 @@ public class Makieta extends JFrame {
                 }*/
                 labelMessage.setText("");
                 DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                DefaultMutableTreeNode nowaPodKategoria = new DefaultMutableTreeNode(textFieldDodajPodKat.getText());
+                DefaultMutableTreeNode nowaPodKategoria = new DefaultMutableTreeNode(textFieldDodajProdukt.getText());
                 if (selectedNode.isRoot()) {
                     labelMessage.setText("Nie mozesz skasowac galezi glownej");
                 } else {
@@ -224,8 +228,10 @@ public class Makieta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
                 DefaultMutableTreeNode galazGlowna = (DefaultMutableTreeNode) model.getRoot();
-                if (!textFielddodajKat.getText().trim().equals("")) {
+
+                if (!pobierzKategorie().equals("")) {
                     galazGlowna.add(new DefaultMutableTreeNode(textFielddodajKat.getText()));
+                    SortowanieDrzewa.sortTree(treeProduktow);
                     model.reload();
                 } else {
                     labelMessage.setText("Musisz wpisac kategorie");
@@ -244,12 +250,12 @@ public class Makieta extends JFrame {
                 textFieldDodawanyEl.setText("");
             }
         });*/
-        dodajPodkatgorie.addActionListener(new ActionListener() {
+        dodajProdukt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
                 DefaultMutableTreeNode wybranyWezel = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                DefaultMutableTreeNode nowaNazwaProduktu = new DefaultMutableTreeNode(textFieldDodajPodKat.getText());
+                DefaultMutableTreeNode nowaNazwaProduktu = new DefaultMutableTreeNode(textFieldDodajProdukt.getText());
                 if (wybranyWezel == null) {
                     labelMessage.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
                 } else {
@@ -257,7 +263,7 @@ public class Makieta extends JFrame {
                         TreeNode parent = wybranyWezel.getParent();
                         boolean equals = parent.equals(wybranyWezel.getRoot());
                         if (equals) {
-                            if (!textFieldDodajPodKat.getText().trim().equals("")) {
+                            if (!pobierzProdukt().equals("")) {
                                 model.insertNodeInto(nowaNazwaProduktu, wybranyWezel, wybranyWezel.getChildCount());
                             } else {
                                 labelMessage.setText("Musisz wpisac nazwe produktu");
@@ -288,7 +294,7 @@ public class Makieta extends JFrame {
                     if (!wybranyWezel.isRoot()) {
                         int poziom = wybranyWezel.getLevel();
                         if (poziom == 2) {
-                            if (!textFieldDodajSklep.getText().trim().equals("")) {
+                            if (!pobierzSklep().trim().equals("")) {
                                 model.insertNodeInto(nowaNazwaSklepu, wybranyWezel, wybranyWezel.getChildCount());
                             } else {
                                 labelMessage.setText("Musisz wpisac nazwe sklepu");
@@ -306,11 +312,37 @@ public class Makieta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
-                wybranaGalaz.setUserObject(elementListyZakupow.getText());
+                wybranaGalaz.setUserObject(textFieldElementListyZakupow.getText());
                 DefaultTreeModel model = (DefaultTreeModel) treeProduktow.getModel();
                 model.reload();
             }
         });
+
+    }
+
+    public String pobierzKategorie() {
+        return textFielddodajKat.getText().trim();
+    }
+
+    public String pobierzProdukt() {
+        return textFieldDodajProdukt.getText().trim();
+    }
+
+    public String pobierzSklep() {
+        return textFieldDodajSklep.getText().trim();
+    }
+
+    public void aktywujPrzycisk() {
+        String nazwaKategorii = pobierzKategorie();
+        boolean maNazweKategorii = (nazwaKategorii.length()>0);
+        dodajKategorie.setEnabled(maNazweKategorii);
+
+/*        String nazwaProduktu = pobierzProdukt();
+        String nazwaSklepu = pobierzSklep();
+        boolean maNazweProduktu = (nazwaProduktu.length()>0);
+        boolean maNazweSklepu = (nazwaSklepu.length()>0);
+        dodajProdukt.setEnabled(maNazweProduktu);
+        dodajSklep.setEnabled(maNazweSklepu);*/
     }
 
     private void findPattern(String text) throws IOException {
@@ -409,7 +441,7 @@ public class Makieta extends JFrame {
 
         JFrame frame = new JFrame("Makieta");
         frame.setContentPane(new Makieta().panelGlowny);
-        frame.setSize(1000, 1000);
+        frame.setSize(1100, 700);
         frame.setVisible(true);
 
     }
