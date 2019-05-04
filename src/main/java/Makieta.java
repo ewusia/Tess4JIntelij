@@ -9,6 +9,7 @@ import javax.swing.tree.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -57,7 +58,6 @@ public class Makieta extends JFrame {
     private JTextArea textAreaSuma;
     private JLabel labelMessage;
     DefaultMutableTreeNode selectedNode;
-    private JTree tree;
     private JLabel selectedLabel;
     private static DrzewoZPlikuTekstowego tr = new DrzewoZPlikuTekstowego();
     private String encoding = "UTF-8";
@@ -228,10 +228,8 @@ public class Makieta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
                 DefaultMutableTreeNode galazGlowna = (DefaultMutableTreeNode) model.getRoot();
-
                 if (!pobierzKategorie().equals("")) {
                     galazGlowna.add(new DefaultMutableTreeNode(textFielddodajKat.getText()));
-                    SortowanieDrzewa.sortTree(treeProduktow);
                     model.reload();
                 } else {
                     labelMessage.setText("Musisz wpisac kategorie");
@@ -315,8 +313,12 @@ public class Makieta extends JFrame {
                 wybranaGalaz.setUserObject(textFieldElementListyZakupow.getText());
                 DefaultTreeModel model = (DefaultTreeModel) treeProduktow.getModel();
                 model.reload();
+
+               
+
             }
         });
+
 
     }
 

@@ -1,11 +1,8 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
+import pl.ewa.tess4j.db.*;
+
+import java.io.*;
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.tree.*;
 
 public class DrzewoZPlikuTekstowego extends JFrame{
 
@@ -78,12 +75,22 @@ public class DrzewoZPlikuTekstowego extends JFrame{
 
     // tworzy wezly
     private void createNodes(DefaultMutableTreeNode top) {
-        DefaultMutableTreeNode kategoria = null;     // pierwszy poziom hierachii
-        DefaultMutableTreeNode konretntyProdukt = null;  // drugi
-        DefaultMutableTreeNode sklep = null;         // trzeci
-        DefaultMutableTreeNode cena = null;         // czwarty, ostatni
 
-        try {
+        DB db  = DBService.getDb();
+
+        for(Kategoria kategoriaDB : db.getKategorie()){
+            DefaultMutableTreeNode kategoria = new DefaultMutableTreeNode(kategoriaDB.getNazwa());
+            for(Produkt produktDB : kategoriaDB.getProdukty()){
+              DefaultMutableTreeNode produkt =  new DefaultMutableTreeNode(produktDB.getNazwa());
+              kategoria.add(produkt);
+                for(Sklep sklepDB : produktDB.getSklepy()){
+                    DefaultMutableTreeNode sklep =  new DefaultMutableTreeNode(sklepDB.getNazwa());
+                    produkt.add(sklep);
+                }
+            }
+            top.add(kategoria);
+        }
+        /*try {
             in = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(bazaProduktow), encoding));
 
             while ((line = in.readLine()) != null) {
@@ -104,10 +111,37 @@ public class DrzewoZPlikuTekstowego extends JFrame{
             in.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public JTree getTree() {
         return tree;
+    }
+
+    public void zapisz(JTree myJTree) {
+
+        File outFile = new File (bazaProduktow);
+        FileOutputStream fos = null;
+
+        TreeModel model = getTree().getModel();
+        Object root = model.getRoot();
+
+
+        try {
+            fos = new FileOutputStream(outFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(fos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            oos.writeObject (myJTree.getModel());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

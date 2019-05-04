@@ -23,5 +23,7 @@ public class DrzewoZPlikuTekstowegoDemo {
         frame.setLocationByPlatform(true);
         frame.setVisible(true);
 
+
+
     }
 }
