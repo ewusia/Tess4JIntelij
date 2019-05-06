@@ -1,6 +1,5 @@
 package pl.ewa.tess4j.db;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 

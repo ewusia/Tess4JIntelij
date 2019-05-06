@@ -1,3 +1,5 @@
+package pl.ewa.tess4j.makieta;
+
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.io.FileUtils;
@@ -14,6 +16,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import java.io.File;
+import java.io.IOException;
 
 import static pl.ewa.tess4j.db.DBService.saveDB;
 
@@ -281,8 +286,6 @@ public class Makieta extends JFrame {
                 saveDB();
             }
         });
-
-
     }
 
     public String pobierzKategorie() {
@@ -301,13 +304,12 @@ public class Makieta extends JFrame {
         String nazwaKategorii = pobierzKategorie();
         boolean maNazweKategorii = (nazwaKategorii.length()>0);
         dodajKategorie.setEnabled(maNazweKategorii);
-
-/*        String nazwaProduktu = pobierzProdukt();
+        String nazwaProduktu = pobierzProdukt();
         String nazwaSklepu = pobierzSklep();
         boolean maNazweProduktu = (nazwaProduktu.length()>0);
         boolean maNazweSklepu = (nazwaSklepu.length()>0);
         dodajProdukt.setEnabled(maNazweProduktu);
-        dodajSklep.setEnabled(maNazweSklepu);*/
+        dodajSklep.setEnabled(maNazweSklepu);
     }
 
     private void findPattern(String text) throws IOException {

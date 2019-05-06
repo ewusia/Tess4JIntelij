@@ -1,3 +1,5 @@
+package pl.ewa.tess4j.makieta;
+
 import pl.ewa.tess4j.db.DB;
 import pl.ewa.tess4j.db.DBService;
 import pl.ewa.tess4j.db.Kategoria;
@@ -23,7 +25,7 @@ public class TworzenieDrzewa extends JFrame {
     }
 
     // tworzy wezly
-    private void tworzenieGalezi(DefaultMutableTreeNode top) {
+    public void tworzenieGalezi(DefaultMutableTreeNode top) {
 
         DB db = DBService.getDb();
 
