@@ -1,13 +1,12 @@
-import java.io.File;
-import java.util.Comparator;
+package smieci;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
+import java.io.File;
+import java.util.Comparator;
 
 public class MainClass extends JFrame {
     public MainClass(String startDir) {
@@ -113,7 +112,6 @@ class SortTreeModel extends DefaultTreeModel {
         return findIndexFor(child, parent, half + 1, i2);
     }
 }
-
 class TreeStringComparator implements Comparator {
     public int compare(Object o1, Object o2) {
         if (!(o1 instanceof DefaultMutableTreeNode && o2 instanceof DefaultMutableTreeNode)) {
