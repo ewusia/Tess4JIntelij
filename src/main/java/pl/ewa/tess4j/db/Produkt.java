@@ -42,4 +42,13 @@ public class Produkt {
     public void setSklepy(List<Sklep> sklepy) {
         this.sklepy = sklepy;
     }
+
+    @Override
+    public String toString() {
+        return "Produkt{" +
+                "nazwa='" + nazwa + '\'' +
+                ", cena=" + cena +
+                ", sklepy=" + sklepy.stream().map(s -> s.toString()) +
+                '}';
+    }
 }

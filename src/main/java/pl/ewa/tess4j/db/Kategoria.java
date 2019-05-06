@@ -40,4 +40,12 @@ public class Kategoria {
     public void removeProdukt(Produkt produkt){
         this.produkty.remove(produkt);
     }
+
+    @Override
+    public String toString() {
+        return "Kategoria{" +
+                "nazwa='" + nazwa + '\'' +
+                ", produkty=" + produkty.stream().map(p -> p.toString()) +
+                '}';
+    }
 }

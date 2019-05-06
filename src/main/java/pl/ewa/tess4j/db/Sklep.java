@@ -19,4 +19,11 @@ public class Sklep {
 
     public Sklep() {
     }
+
+    @Override
+    public String toString() {
+        return "Sklep{" +
+                "nazwa='" + nazwa + '\'' +
+                '}';
+    }
 }
