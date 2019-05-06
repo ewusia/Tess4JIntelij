@@ -1,3 +1,6 @@
+/*
+package smieci;
+
 import pl.ewa.tess4j.db.*;
 
 import java.io.*;
@@ -24,10 +27,14 @@ public class DrzewoZPlikuTekstowego extends JFrame{
         tree = new JTree(top);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-       /* JScrollPane scroll = new JScrollPane(tree);
-        this.add(scroll);*/
+       */
+/* JScrollPane scroll = new JScrollPane(tree);
+        this.add(scroll);*//*
+
+*/
 /*        JScrollPane scrollTree = new JScrollPane(tree);
-        scrollTree.setViewportView(tree);*/
+        scrollTree.setViewportView(tree);*//*
+
     }
 
     // ta metoda odczytuje plik i drukuje wszystkie linie na standardowe wyjście w celach testowych
@@ -90,7 +97,8 @@ public class DrzewoZPlikuTekstowego extends JFrame{
             }
             top.add(kategoria);
         }
-        /*try {
+        */
+/*try {
             in = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(bazaProduktow), encoding));
 
             while ((line = in.readLine()) != null) {
@@ -111,7 +119,8 @@ public class DrzewoZPlikuTekstowego extends JFrame{
             in.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }*//*
+
     }
 
     public JTree getTree() {
@@ -144,4 +153,4 @@ public class DrzewoZPlikuTekstowego extends JFrame{
             e.printStackTrace();
         }
     }
-}
+}*/

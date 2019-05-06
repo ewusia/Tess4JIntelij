@@ -1,13 +1,16 @@
+/*
 import java.awt.BorderLayout;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+*/
 /**
  * JTree basic tutorial and example
  * @author wwww.codejava.net
- */
+ *//*
+
 public class Drzewo extends JFrame
 {
     public JTree tree;
@@ -60,12 +63,14 @@ public class Drzewo extends JFrame
             }
         });
         // metoda wyswietla sciezke do obiektu, na ktorym sie znajdujemy
+*/
 /*        tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
                 selectedLabel.setText(e.getPath().toString());
             }
-        });*/
+        });*//*
+
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Drzewo");
@@ -73,7 +78,8 @@ public class Drzewo extends JFrame
         this.setVisible(true);
     }
 
-    /*public static void main(String[] args)
+    */
+/*public static void main(String[] args)
     {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -81,5 +87,6 @@ public class Drzewo extends JFrame
                 new Drzewo();
             }
         });
-    }*/
-}
+    }*//*
+
+}*/

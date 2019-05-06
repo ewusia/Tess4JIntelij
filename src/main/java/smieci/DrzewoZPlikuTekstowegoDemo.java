@@ -1,12 +1,18 @@
+/*
+package smieci;
+
+import smieci.DrzewoZPlikuTekstowego;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 
+*/
 /**
- * @author engineervix
- */
+ *//*
+
 public class DrzewoZPlikuTekstowegoDemo {
 
     private static DrzewoZPlikuTekstowego tr = new DrzewoZPlikuTekstowego();
@@ -26,4 +32,4 @@ public class DrzewoZPlikuTekstowegoDemo {
 
 
     }
-}
+}*/

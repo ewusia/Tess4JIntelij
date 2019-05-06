@@ -9,12 +9,13 @@ import javax.swing.tree.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import static pl.ewa.tess4j.db.DBService.saveDB;
 
 public class Makieta extends JFrame {
 
@@ -59,23 +60,14 @@ public class Makieta extends JFrame {
     private JLabel labelMessage;
     DefaultMutableTreeNode selectedNode;
     private JLabel selectedLabel;
-    private static DrzewoZPlikuTekstowego tr = new DrzewoZPlikuTekstowego();
-    private String encoding = "UTF-8";
-    String bazaProduktow = "baza.txt";
-    private JScrollPane scrollPaneTree;
-
+    private static TworzenieDrzewa tr = new TworzenieDrzewa();
 
     public Makieta() {
 
-        //fillDataToJTree();
-        //createTree();
         JTree t = tr.getTree();
 
         DefaultTreeModel model = (DefaultTreeModel) t.getModel();
         treeProduktow.setModel(model);
-
-/*        JTree tree = new JTree(model);
-        treeProduktow.add(new JScrollPane(tree));*/
 
         otwórzPlikButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -171,6 +163,7 @@ public class Makieta extends JFrame {
         });
         zamknijButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                saveDB();
                 System.exit(0);
             }
         });
@@ -178,12 +171,6 @@ public class Makieta extends JFrame {
         treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-
-                //JTree t = tr.getTree();
-                //DefaultTreeModel model = (DefaultTreeModel) t.getModel();
-                //treeProduktow.setModel(model);
-                /*JScrollPane scrollTree = new JScrollPane(t, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-                add(scrollTree);*/
 
                 if (treeProduktow.isSelectionEmpty())
                     return;
@@ -195,19 +182,9 @@ public class Makieta extends JFrame {
             }
         });
 
-        //DefaultTreeModel model = fillDataToJTree();
-/*        JTree model2 = createTree();
-        treeProduktow = model2;*/
-
         usunButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                if (selectedNode != null) {
-                    DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
-                    parent.remove(selectedNode);
-                   model.reload(parent);
-                }*/
                 labelMessage.setText("");
                 DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
                 DefaultMutableTreeNode nowaPodKategoria = new DefaultMutableTreeNode(textFieldDodajProdukt.getText());
@@ -220,6 +197,7 @@ public class Makieta extends JFrame {
                         labelMessage.setText("Musisz wybrac kategorie lub podkategorie do usuniecia");
                     }
                 }
+                saveDB();
             }
 
         });
@@ -234,20 +212,10 @@ public class Makieta extends JFrame {
                 } else {
                     labelMessage.setText("Musisz wpisac kategorie");
                 }
+                saveDB();
             }
         });
 
-        /*dodajKategorie.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                if (selectedNode !=null) {
-                    selectedNode.insert(new DefaultMutableTreeNode(textFieldDodawanyEl.getText()), selectedNode.getIndex(selectedNode.getLastChild()));
-                    model.reload(selectedNode);
-                }
-                textFieldDodawanyEl.setText("");
-            }
-        });*/
         dodajProdukt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -273,11 +241,7 @@ public class Makieta extends JFrame {
                         labelMessage.setText("Musisz wybrac kategorie");
                     }
                 }
-                try {
-                    zapisDrzewaDoPliku(t);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                saveDB();
             }
         });
         dodajSklep.addActionListener(new ActionListener() {
@@ -304,6 +268,7 @@ public class Makieta extends JFrame {
                         labelMessage.setText("Musisz wybrac produkt");
                     }
                 }
+                saveDB();
             }
         });
         buttonEdytujElement.addActionListener(new ActionListener() {
@@ -313,9 +278,7 @@ public class Makieta extends JFrame {
                 wybranaGalaz.setUserObject(textFieldElementListyZakupow.getText());
                 DefaultTreeModel model = (DefaultTreeModel) treeProduktow.getModel();
                 model.reload();
-
-               
-
+                saveDB();
             }
         });
 
@@ -400,28 +363,6 @@ public class Makieta extends JFrame {
         FileWriter fw = new FileWriter("paragon.txt");
         fw.write(fullText);
         fw.close();
-    }
-
-    private void zapisDrzewaDoPliku(JTree treeProduktow) throws IOException {
-        //new BufferedWriter(new OutputStreamWriter(bazaProduktow, encoding));
-
-        try{
-            FileOutputStream file= new FileOutputStream("baza.txt");
-            Writer       outputStreamWriter = new OutputStreamWriter(file);
-
-            outputStreamWriter.write(String.valueOf(treeProduktow));
-
-            outputStreamWriter.close();
-        }
-        catch(Exception e){}
-        /*//Deserialization
-        JTree tree2=null;
-        try{
-            FileInputStream file= new FileInputStream("/home/alain/Bureau/serialisation.txt");
-            ObjectInputStream in = new ObjectInputStream(file);
-            tree2 = (JTree) in.readObject();
-        }
-        catch(Exception e){}*/
     }
 
     private void czytaniePliku() throws FileNotFoundException, IOException {

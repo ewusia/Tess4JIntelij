@@ -6,50 +6,24 @@ import pl.ewa.tess4j.db.Sklep;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeSelectionModel;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.ObjectOutputStream;
 
-public class DrzewoZBazy extends JFrame {
+public class TworzenieDrzewa extends JFrame {
 
     private DefaultMutableTreeNode top;
     private JTree tree;
 
-    public DrzewoZBazy() {
+    public TworzenieDrzewa() {
         top = new DefaultMutableTreeNode("");
-        createNodes(top);
+        tworzenieGalezi(top);
 
         // Utworzy drzewo, które można wybrać jednocześnie.
         tree = new JTree(top);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-
-       /* JScrollPane scroll = new JScrollPane(tree);
-        this.add(scroll);*/
-/*        JScrollPane scrollTree = new JScrollPane(tree);
-        scrollTree.setViewportView(tree);*/
-    }
-
-
-    // ta metoda oblicza liczbę wystąpień znaku dzieki czemu tworzy sie struktura hierachiczna
-    private int countOccurrences(String haystack, char needle) {
-        int count = 0;
-        for (int i = 0; i < haystack.length(); i++) {
-            if (haystack.charAt(i) == needle) {
-                count++;
-            }
-        }
-        return count;
     }
 
     // tworzy wezly
-    private void createNodes(DefaultMutableTreeNode top) {
+    private void tworzenieGalezi(DefaultMutableTreeNode top) {
 
         DB db = DBService.getDb();
 

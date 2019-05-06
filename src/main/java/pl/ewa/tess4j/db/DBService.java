@@ -42,22 +42,7 @@ public class DBService {
     public static void main(String[] args) throws Exception {
 
         DB db = getDb();
-        db.getKategorie().get(0).setNazwa("huj");
-
-//        Sklep auchan = new Sklep("Auhan");
-//        Produkt laciate = new Produkt("Laciate", 4.0f, Arrays.asList(auchan));
-//        Produkt mars = new Produkt("Mars", 1.0f, Arrays.asList(auchan));
-//
-//        Kategoria slodyczne = new Kategoria("Slodycze", Arrays.asList(mars));
-//        Kategoria nabial = new Kategoria("Nabial", Arrays.asList(laciate));
-//
-//
-//        DB db = new DB(Arrays.asList(slodyczne,nabial));
-//
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-//        mapper.writeValue(dbLocation, db);
+        db.getKategorie().get(0).setNazwa("Mrozonki");
     }
 
     @Override
