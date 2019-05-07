@@ -1,0 +1,112 @@
+Root
+	CATEGORY A
+		Sub-Category_A1
+			foo-1
+			foo-2
+			foo-3
+		Sub-Category_A2
+			bar-1
+			bar-2
+			bar-3
+			bar-4
+		Sub-Category_A3
+			foobar-1
+			foobar-2
+			foobar-3
+			foobar-4
+			foobar-5
+		Sub-Category_A4
+			dog
+			cat
+			duck
+			rabbit
+			chicken
+			pig
+		Sub-Category_A5
+			tuxpaint
+			gimp
+			imagemagick
+		Sub-Category_A6
+			gawk
+			sed
+			tar
+			python
+			make
+			java
+			grep
+			perl
+		Sub-Category_A7
+			linux
+			mac
+			BSD
+	CATEGORY B
+		Sub-Category_B1
+			lion
+			leopard
+		Sub-Category_B2
+			paris
+			harare
+			new york
+			kinshasa
+			lagos
+			london
+			dakar
+			melbourne
+			moscow
+			namib
+			tokyo
+			cape town
+			chinsali
+			kigali
+		Sub-Category_B3
+			clouds
+			sunshine
+			rain
+			wind
+		Sub-Category_B4
+			samsung
+			LG
+			nokia
+			huawei
+			sony ericsson
+			phillips
+			motorola
+			ZTE
+		Sub-Category_B5
+			married
+			single
+			divorced
+	CATEGORY C
+		Sub-Category_C1
+			jonathan
+			jacob
+			john
+			joshua
+			jeremiah
+			joseph
+			justin
+			justice
+			jambazi
+			jeremy
+			josephine			
+			jennipher
+			jane
+			jenny
+	CATEGORY D
+		Sub-Category_D1
+			this is a sentence
+			this is another sentence
+			and another one
+			what?
+			really?
+			You are so annoying
+			Ok shut up
+			what is wrong with this country?
+			you are now sounding like Daffy Duck
+			are you related?
+			maybe
+			are you exclusive property of Warner Brothers Inc?
+			no. why?
+			nothing, really
+			just wanted to annoy you
+			I guess I succeeded!
