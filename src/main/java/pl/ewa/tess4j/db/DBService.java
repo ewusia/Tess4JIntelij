@@ -38,16 +38,14 @@ public class DBService {
         }
     }
 
+    public static void cleanDB() {
+        getDb().getKategorie().clear();
+    }
+
     public static void main(String[] args) throws Exception {
 
         DB db = getDb();
         db.getKategorie().get(0).setNazwa("Mrozonki");
     }
-
-    @Override
-    protected void finalize() throws Throwable {
-        saveDB();
-    }
-
 
 }

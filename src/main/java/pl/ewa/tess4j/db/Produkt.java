@@ -3,7 +3,7 @@ package pl.ewa.tess4j.db;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Produkt {
+public class Produkt implements Nameable {
 
     private String nazwa = "";
     private float cena = 0.0f;
@@ -45,10 +45,16 @@ public class Produkt {
 
     @Override
     public String toString() {
-        return "Produkt{" +
-                "nazwa='" + nazwa + '\'' +
-                ", cena=" + cena +
-                ", sklepy=" + sklepy.stream().map(s -> s.toString()) +
-                '}';
+        return nazwa;
+    }
+
+    @Override
+    public String getName() {
+        return nazwa;
+    }
+
+    @Override
+    public void setName(String nazwa) {
+        this.nazwa = nazwa;
     }
 }

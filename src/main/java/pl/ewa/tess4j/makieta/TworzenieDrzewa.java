@@ -30,12 +30,12 @@ public class TworzenieDrzewa extends JFrame {
         DB db = DBService.getDb();
 
         for (Kategoria kategoriaDB : db.getKategorie()) {
-            DefaultMutableTreeNode kategoria = new DefaultMutableTreeNode(kategoriaDB.getNazwa());
+            DefaultMutableTreeNode kategoria = new DefaultMutableTreeNode(kategoriaDB);
             for (Produkt produktDB : kategoriaDB.getProdukty()) {
-                DefaultMutableTreeNode produkt = new DefaultMutableTreeNode(produktDB.getNazwa());
+                DefaultMutableTreeNode produkt = new DefaultMutableTreeNode(produktDB);
                 kategoria.add(produkt);
                 for (Sklep sklepDB : produktDB.getSklepy()) {
-                    DefaultMutableTreeNode sklep = new DefaultMutableTreeNode(sklepDB.getNazwa());
+                    DefaultMutableTreeNode sklep = new DefaultMutableTreeNode(sklepDB);
                     produkt.add(sklep);
                 }
             }

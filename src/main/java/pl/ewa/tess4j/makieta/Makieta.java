@@ -3,28 +3,42 @@ package pl.ewa.tess4j.makieta;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.io.FileUtils;
+import pl.ewa.tess4j.db.DBService;
+import pl.ewa.tess4j.db.Kategoria;
+import pl.ewa.tess4j.db.Nameable;
+import pl.ewa.tess4j.db.Produkt;
+import pl.ewa.tess4j.db.Sklep;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.*;
-import java.awt.event.*;
-import java.io.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import java.io.File;
-import java.io.IOException;
 
 import static pl.ewa.tess4j.db.DBService.saveDB;
 
 public class Makieta extends JFrame {
 
 
+    private static TworzenieDrzewa tr = new TworzenieDrzewa();
+    DefaultMutableTreeNode selectedNode;
     private JTextArea jTextAreaListaProduktow;
     private JTextArea jTextAreaListaZakupow;
     private JButton wczytajParagonButton;
@@ -63,16 +77,41 @@ public class Makieta extends JFrame {
     private JButton zapiszListeDoPlikuButton;
     private JTextArea textAreaSuma;
     private JLabel labelMessage;
-    DefaultMutableTreeNode selectedNode;
     private JLabel selectedLabel;
-    private static TworzenieDrzewa tr = new TworzenieDrzewa();
+
 
     public Makieta() {
 
         JTree t = tr.getTree();
 
+
         DefaultTreeModel model = (DefaultTreeModel) t.getModel();
+
         treeProduktow.setModel(model);
+
+        treeProduktow.addTreeSelectionListener(e -> {
+
+            DBService.cleanDB();
+            TreeModel model1 = t.getModel();
+            DefaultMutableTreeNode root = (DefaultMutableTreeNode) model1.getRoot();
+
+            for (int r = 0; r < root.getChildCount(); r++) {
+                DefaultMutableTreeNode kategoriaNode = (DefaultMutableTreeNode) root.getChildAt(r);
+                Kategoria kategoria = (Kategoria) kategoriaNode.getUserObject();
+                for (int p = 0; p < kategoriaNode.getChildCount(); p++) {
+                    DefaultMutableTreeNode produktNode = (DefaultMutableTreeNode) kategoriaNode.getChildAt(p);
+                    Produkt produkt = (Produkt) produktNode.getUserObject();
+                    for (int s = 0; s < produktNode.getChildCount(); s++) {
+                        DefaultMutableTreeNode sklepNode = (DefaultMutableTreeNode) produktNode.getChildAt(s);
+                        Sklep sklep = (Sklep) sklepNode.getUserObject();
+
+                        DBService.getDb().addKategoria(kategoria);
+                    }
+                }
+            }
+
+
+        });
 
         otwórzPlikButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -82,14 +121,14 @@ public class Makieta extends JFrame {
                 if (odpowiedz == fc.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
                     try {
-                        jTextAreaListaProduktow.read( new FileReader( file.getAbsolutePath() ), null );
+                        jTextAreaListaProduktow.read(new FileReader(file.getAbsolutePath()), null);
                         // test dla pattern
                         String str = FileUtils.readFileToString(file, "UTF-8");
                         findPattern(str);
                         // koniec testu dla pattern
                     } catch (IOException ex) {
-                        System.out.println("Nie mogę otworzyć pliku: "+file.getAbsolutePath());
-                        System.out.println("Problem: "+ex);
+                        System.out.println("Nie mogę otworzyć pliku: " + file.getAbsolutePath());
+                        System.out.println("Problem: " + ex);
                     }
                 }
             }
@@ -134,7 +173,7 @@ public class Makieta extends JFrame {
                                 found = true;
                             }
                         }
-                        for (String object: list) {
+                        for (String object : list) {
                             jTextAreaListaZakupow.append("test\n");
 
                             jTextAreaListaZakupow.append(object);
@@ -161,10 +200,11 @@ public class Makieta extends JFrame {
                         out.write(jTextAreaListaProduktow.getText());
                         out.close();
                     } catch (IOException ex) {
-                        System.out.println("Nie mogę zapisać pliku: "+file.getAbsolutePath());
-                        System.out.println("Problem: "+ex);
+                        System.out.println("Nie mogę zapisać pliku: " + file.getAbsolutePath());
+                        System.out.println("Problem: " + ex);
                     }
-                }            }
+                }
+            }
         });
         zamknijButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -280,12 +320,21 @@ public class Makieta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
-                wybranaGalaz.setUserObject(textFieldElementListyZakupow.getText());
+                Nameable userObject = (Nameable) wybranaGalaz.getUserObject();
+                userObject.setName(textFieldElementListyZakupow.getText());
                 DefaultTreeModel model = (DefaultTreeModel) treeProduktow.getModel();
                 model.reload();
                 saveDB();
             }
         });
+    }
+
+    public static void main(String args[]) {
+        JFrame frame = new JFrame("Makieta");
+        frame.setContentPane(new Makieta().panelGlowny);
+        frame.setSize(1100, 700);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public String pobierzKategorie() {
@@ -302,12 +351,12 @@ public class Makieta extends JFrame {
 
     public void aktywujPrzycisk() {
         String nazwaKategorii = pobierzKategorie();
-        boolean maNazweKategorii = (nazwaKategorii.length()>0);
+        boolean maNazweKategorii = (nazwaKategorii.length() > 0);
         dodajKategorie.setEnabled(maNazweKategorii);
         String nazwaProduktu = pobierzProdukt();
         String nazwaSklepu = pobierzSklep();
-        boolean maNazweProduktu = (nazwaProduktu.length()>0);
-        boolean maNazweSklepu = (nazwaSklepu.length()>0);
+        boolean maNazweProduktu = (nazwaProduktu.length() > 0);
+        boolean maNazweSklepu = (nazwaSklepu.length() > 0);
         dodajProdukt.setEnabled(maNazweProduktu);
         dodajSklep.setEnabled(maNazweSklepu);
     }
@@ -338,7 +387,7 @@ public class Makieta extends JFrame {
                     found = true;
                 }
             }
-            for (String object: list) {
+            for (String object : list) {
                 System.out.println(object);
             }
 
@@ -348,7 +397,6 @@ public class Makieta extends JFrame {
         //return foundPattern;
     }
 
-
     public void zapiszOCRdoPliku(String text) {
 
         try {
@@ -357,9 +405,10 @@ public class Makieta extends JFrame {
             zapis.close();
         } catch (FileNotFoundException ex) {
             System.out.println("Nie mogę zapisać pliku");
-            System.out.println("Problem: "+ex);
+            System.out.println("Problem: " + ex);
         }
     }
+
     private void zapisDoPliku(String fullText) throws IOException {
 
         FileWriter fw = new FileWriter("paragon.txt");
@@ -372,22 +421,13 @@ public class Makieta extends JFrame {
         BufferedReader br = new BufferedReader(fr);
         String yo = "test";
         String s;
-        while((s = br.readLine()) != null) {
+        while ((s = br.readLine()) != null) {
             if (s.contains(yo)) {
                 jTextAreaListaZakupow.append(s + "\n");
             } else {
                 jTextAreaListaZakupow.append("brak");
             }
         }
-
-    }
-
-    public static void main(String args[]) {
-
-        JFrame frame = new JFrame("Makieta");
-        frame.setContentPane(new Makieta().panelGlowny);
-        frame.setSize(1100, 700);
-        frame.setVisible(true);
 
     }
 }

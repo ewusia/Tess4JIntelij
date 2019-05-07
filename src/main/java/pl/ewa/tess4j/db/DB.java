@@ -22,14 +22,14 @@ public class DB {
         this.kategorie = kategorie;
     }
 
-    public void addKategoria(Kategoria kategoria){
-        this.kategorie.add( kategoria);
+    public void addKategoria(Kategoria kategoria) {
+        this.kategorie.add(kategoria);
     }
 
     @Override
     public String toString() {
         return "DB{" +
-                "kategorie=" + kategorie.stream().map(k->k.toString()) +
+                "kategorie=" + kategorie.stream().map(k -> k.toString()) +
                 '}';
     }
 }
