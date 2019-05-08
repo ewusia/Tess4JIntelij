@@ -18,6 +18,8 @@ public class Produkt implements Nameable {
 
     public Produkt() {
     }
+    public Produkt(String produktText) {
+    }
 
     public String getNazwa() {
         return nazwa;

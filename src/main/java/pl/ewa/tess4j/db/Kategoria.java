@@ -17,6 +17,9 @@ public class Kategoria implements Nameable {
         this.produkty = produkty;
     }
 
+    public Kategoria(String Kategoriatext) {
+    }
+
     public String getNazwa() {
         return nazwa;
     }

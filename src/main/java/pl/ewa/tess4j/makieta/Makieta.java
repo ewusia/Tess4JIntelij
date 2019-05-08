@@ -251,9 +251,11 @@ public class Makieta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
                 DefaultMutableTreeNode galazGlowna = (DefaultMutableTreeNode) model.getRoot();
+                Kategoria userObject = (Kategoria) galazGlowna.getUserObject();
+                Kategoria kategoria = new Kategoria(textFielddodajKat.getText());
                 if (!pobierzKategorie().equals("")) {
-                    galazGlowna.add(new DefaultMutableTreeNode(textFielddodajKat.getText()));
-                    model.reload();
+                    //galazGlowna.add(new DefaultMutableTreeNode(textFielddodajKat.getText()));
+                    //model.reload();
                 } else {
                     labelMessage.setText("Musisz wpisac kategorie");
                 }
@@ -265,17 +267,20 @@ public class Makieta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
-                DefaultMutableTreeNode wybranyWezel = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                DefaultMutableTreeNode nowaNazwaProduktu = new DefaultMutableTreeNode(textFieldDodajProdukt.getText());
-                if (wybranyWezel == null) {
+                DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                Kategoria userObject = (Kategoria) wybranaGalaz.getUserObject();
+                //DefaultMutableTreeNode nowaNazwaProduktu = new DefaultMutableTreeNode(textFieldDodajProdukt.getText());
+                Produkt produkt = new Produkt(textFieldDodajProdukt.getText());
+                if (wybranaGalaz == null) {
                     labelMessage.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
                 } else {
-                    if (!wybranyWezel.isRoot()) {
-                        TreeNode parent = wybranyWezel.getParent();
-                        boolean equals = parent.equals(wybranyWezel.getRoot());
+                    if (!wybranaGalaz.isRoot()) {
+                        TreeNode parent = wybranaGalaz.getParent();
+                        boolean equals = parent.equals(wybranaGalaz.getRoot());
                         if (equals) {
                             if (!pobierzProdukt().equals("")) {
-                                model.insertNodeInto(nowaNazwaProduktu, wybranyWezel, wybranyWezel.getChildCount());
+                                //model.insertNodeInto(nowaNazwaProduktu, wybranaGalaz, wybranaGalaz.getChildCount());
+                                userObject.addProdukt(produkt);
                             } else {
                                 labelMessage.setText("Musisz wpisac nazwe produktu");
                             }
