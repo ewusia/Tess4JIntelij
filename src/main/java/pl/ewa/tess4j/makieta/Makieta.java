@@ -90,7 +90,6 @@ public class Makieta extends JFrame {
         treeProduktow.setModel(model);
 
         treeProduktow.addTreeSelectionListener(e -> {
-
             DBService.cleanDB();
             TreeModel model1 = t.getModel();
             DefaultMutableTreeNode root = (DefaultMutableTreeNode) model1.getRoot();
@@ -268,9 +267,8 @@ public class Makieta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
                 DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                Kategoria userObject = (Kategoria) wybranaGalaz.getUserObject();
-                //DefaultMutableTreeNode nowaNazwaProduktu = new DefaultMutableTreeNode(textFieldDodajProdukt.getText());
-                Produkt produkt = new Produkt(textFieldDodajProdukt.getText());
+                Kategoria kategoriaDB = (Kategoria) wybranaGalaz.getUserObject();
+                Produkt produktDB = new Produkt(textFieldDodajProdukt.getText());
                 if (wybranaGalaz == null) {
                     labelMessage.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
                 } else {
@@ -279,8 +277,9 @@ public class Makieta extends JFrame {
                         boolean equals = parent.equals(wybranaGalaz.getRoot());
                         if (equals) {
                             if (!pobierzProdukt().equals("")) {
-                                //model.insertNodeInto(nowaNazwaProduktu, wybranaGalaz, wybranaGalaz.getChildCount());
-                                userObject.addProdukt(produkt);
+                                kategoriaDB.addProdukt(produktDB);
+                                wybranaGalaz.add(new DefaultMutableTreeNode(produktDB));
+                                ((DefaultTreeModel) treeProduktow.getModel()).reload();
                             } else {
                                 labelMessage.setText("Musisz wpisac nazwe produktu");
                             }
@@ -291,9 +290,9 @@ public class Makieta extends JFrame {
                         labelMessage.setText("Musisz wybrac kategorie");
                     }
                 }
-                saveDB();
             }
         });
+
         dodajSklep.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

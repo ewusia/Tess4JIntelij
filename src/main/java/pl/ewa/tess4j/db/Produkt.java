@@ -18,7 +18,9 @@ public class Produkt implements Nameable {
 
     public Produkt() {
     }
-    public Produkt(String produktText) {
+
+    public Produkt(String nazwa) {
+        this.nazwa = nazwa;
     }
 
     public String getNazwa() {
