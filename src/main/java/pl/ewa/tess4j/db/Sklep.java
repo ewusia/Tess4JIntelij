@@ -2,7 +2,7 @@ package pl.ewa.tess4j.db;
 
 public class Sklep implements Nameable {
 
-    private String nazwa;
+    private String nazwa = "";
 
     public Sklep(String nazwa) {
         this.nazwa = nazwa;

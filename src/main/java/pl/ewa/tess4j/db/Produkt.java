@@ -47,6 +47,10 @@ public class Produkt implements Nameable {
         this.sklepy = sklepy;
     }
 
+    public void addSklep(Sklep sklep) {
+        this.sklepy.add(sklep);
+    }
+
     @Override
     public String toString() {
         return nazwa;

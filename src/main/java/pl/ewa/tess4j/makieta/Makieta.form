@@ -213,22 +213,12 @@
           <text value="x"/>
         </properties>
       </component>
-      <component id="cad38" class="javax.swing.JButton" binding="buttonEdytujElement">
+      <component id="cad38" class="javax.swing.JButton" binding="button_edytujElement">
         <constraints>
           <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Edytuj"/>
-        </properties>
-      </component>
-      <component id="67867" class="javax.swing.JTextField" binding="textFieldElementListyZakupow">
-        <constraints>
-          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <inheritsPopupMenu value="true"/>
         </properties>
       </component>
       <component id="96fc2" class="javax.swing.JLabel" binding="labelEl">
@@ -314,6 +304,17 @@
           <font name="Consolas" style="1"/>
           <foreground color="-1885659"/>
           <text value="*"/>
+        </properties>
+      </component>
+      <component id="67867" class="javax.swing.JTextField" binding="textFieldElementListyZakupow">
+        <constraints>
+          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <inheritsPopupMenu value="true"/>
+          <text value=""/>
         </properties>
       </component>
     </children>

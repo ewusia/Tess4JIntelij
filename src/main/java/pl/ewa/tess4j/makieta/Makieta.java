@@ -3,13 +3,11 @@ package pl.ewa.tess4j.makieta;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.io.FileUtils;
-import pl.ewa.tess4j.db.DBService;
-import pl.ewa.tess4j.db.Kategoria;
-import pl.ewa.tess4j.db.Nameable;
-import pl.ewa.tess4j.db.Produkt;
-import pl.ewa.tess4j.db.Sklep;
+import pl.ewa.tess4j.db.*;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -19,6 +17,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -68,7 +67,7 @@ public class Makieta extends JFrame {
     private JTextField textFielddodajKat;
     private JLabel labelDodajSklep;
     private JButton dodajSklep;
-    private JButton buttonEdytujElement;
+    private JButton button_edytujElement;
     private JLabel labelSklep;
     private JLabel labelCena;
     private JLabel labelProdukt;
@@ -82,8 +81,19 @@ public class Makieta extends JFrame {
 
     public Makieta() {
 
-        JTree t = tr.getTree();
+        DocumentListener listener=new DocumentListener()
+        {
+            @Override public void insertUpdate(DocumentEvent e) { aktywujPrzyciki(); }
+            @Override public void removeUpdate(DocumentEvent e) { aktywujPrzyciki(); }
+            @Override public void changedUpdate(DocumentEvent e) { aktywujPrzyciki(); }
+        };
+        textFieldElementListyZakupow.getDocument().addDocumentListener(listener);
+        textFielddodajKat.getDocument().addDocumentListener(listener);
+        textFieldDodajProdukt.getDocument().addDocumentListener(listener);
+        textFieldDodajSklep.getDocument().addDocumentListener(listener);
+        aktywujPrzyciki();
 
+        JTree t = tr.getTree();
 
         DefaultTreeModel model = (DefaultTreeModel) t.getModel();
 
@@ -212,7 +222,7 @@ public class Makieta extends JFrame {
             }
         });
 
-        treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
+        /*treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
 
@@ -224,19 +234,17 @@ public class Makieta extends JFrame {
                 String element = defaultMutableTreeNode.getUserObject().toString();
                 textFieldElementListyZakupow.setText(element.trim());
             }
-        });
+        });*/
 
         usunButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                DefaultMutableTreeNode nowaPodKategoria = new DefaultMutableTreeNode(textFieldDodajProdukt.getText());
-                if (selectedNode.isRoot()) {
+                DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();if (wybranaGalaz.isRoot()) {
                     labelMessage.setText("Nie mozesz skasowac galezi glownej");
                 } else {
-                    if (selectedNode != null) {
-                        model.removeNodeFromParent(selectedNode);
+                    if (wybranaGalaz != null) {
+                        model.removeNodeFromParent(wybranaGalaz);
                     } else {
                         labelMessage.setText("Musisz wybrac kategorie lub podkategorie do usuniecia");
                     }
@@ -253,12 +261,12 @@ public class Makieta extends JFrame {
                 Kategoria userObject = (Kategoria) galazGlowna.getUserObject();
                 Kategoria kategoria = new Kategoria(textFielddodajKat.getText());
                 if (!pobierzKategorie().equals("")) {
-                    //galazGlowna.add(new DefaultMutableTreeNode(textFielddodajKat.getText()));
-                    //model.reload();
+                    galazGlowna.add(new DefaultMutableTreeNode(textFielddodajKat.getText()));
+                    model.reload();
                 } else {
                     labelMessage.setText("Musisz wpisac kategorie");
                 }
-                saveDB();
+                aktywujPrzyciki();
             }
         });
 
@@ -267,8 +275,6 @@ public class Makieta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
                 DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                Kategoria kategoriaDB = (Kategoria) wybranaGalaz.getUserObject();
-                Produkt produktDB = new Produkt(textFieldDodajProdukt.getText());
                 if (wybranaGalaz == null) {
                     labelMessage.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
                 } else {
@@ -277,6 +283,8 @@ public class Makieta extends JFrame {
                         boolean equals = parent.equals(wybranaGalaz.getRoot());
                         if (equals) {
                             if (!pobierzProdukt().equals("")) {
+                                Kategoria kategoriaDB = (Kategoria) wybranaGalaz.getUserObject();
+                                Produkt produktDB = new Produkt(textFieldDodajProdukt.getText());
                                 kategoriaDB.addProdukt(produktDB);
                                 wybranaGalaz.add(new DefaultMutableTreeNode(produktDB));
                                 ((DefaultTreeModel) treeProduktow.getModel()).reload();
@@ -290,6 +298,7 @@ public class Makieta extends JFrame {
                         labelMessage.setText("Musisz wybrac kategorie");
                     }
                 }
+                aktywujPrzyciki();
             }
         });
 
@@ -297,16 +306,19 @@ public class Makieta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 labelMessage.setText("");
-                DefaultMutableTreeNode wybranyWezel = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                DefaultMutableTreeNode nowaNazwaSklepu = new DefaultMutableTreeNode(textFieldDodajSklep.getText());
-                if (wybranyWezel == null) {
+                DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                if (wybranaGalaz == null) {
                     labelMessage.setText("Musisz wybrac produkt, a nastepnie wpisac nazwe sklepu");
                 } else {
-                    if (!wybranyWezel.isRoot()) {
-                        int poziom = wybranyWezel.getLevel();
+                    if (!wybranaGalaz.isRoot()) {
+                        int poziom = wybranaGalaz.getLevel();
                         if (poziom == 2) {
                             if (!pobierzSklep().trim().equals("")) {
-                                model.insertNodeInto(nowaNazwaSklepu, wybranyWezel, wybranyWezel.getChildCount());
+                                Produkt produktDB = (Produkt) wybranaGalaz.getUserObject();
+                                Sklep sklepDB = new Sklep(textFieldDodajSklep.getText());
+                                produktDB.addSklep(sklepDB);
+                                wybranaGalaz.add(new DefaultMutableTreeNode(sklepDB));
+                                ((DefaultTreeModel) treeProduktow.getModel()).reload();
                             } else {
                                 labelMessage.setText("Musisz wpisac nazwe sklepu");
                             }
@@ -317,18 +329,22 @@ public class Makieta extends JFrame {
                         labelMessage.setText("Musisz wybrac produkt");
                     }
                 }
-                saveDB();
+                aktywujPrzyciki();
             }
         });
-        buttonEdytujElement.addActionListener(new ActionListener() {
+
+        button_edytujElement.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
                 Nameable userObject = (Nameable) wybranaGalaz.getUserObject();
                 userObject.setName(textFieldElementListyZakupow.getText());
+                aktywujPrzyciki();
                 DefaultTreeModel model = (DefaultTreeModel) treeProduktow.getModel();
                 model.reload();
                 saveDB();
+                aktywujPrzyciki();
+
             }
         });
     }
@@ -339,6 +355,23 @@ public class Makieta extends JFrame {
         frame.setSize(1100, 700);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    public void aktywujPrzyciki()
+    {
+        String wartoscDoEdycji=pobierzWartoscDoEdycji();
+        boolean maWartoscDoEdycji=(wartoscDoEdycji.length()>0);
+        button_edytujElement.setEnabled(maWartoscDoEdycji);
+
+        String nazwaKategorii = pobierzKategorie();
+        boolean maNazweKategorii = (nazwaKategorii.length() > 0);
+        dodajKategorie.setEnabled(maNazweKategorii);
+        String nazwaProduktu = pobierzProdukt();
+        String nazwaSklepu = pobierzSklep();
+        boolean maNazweProduktu = (nazwaProduktu.length() > 0);
+        boolean maNazweSklepu = (nazwaSklepu.length() > 0);
+        dodajProdukt.setEnabled(maNazweProduktu);
+        dodajSklep.setEnabled(maNazweSklepu);
     }
 
     public String pobierzKategorie() {
@@ -353,16 +386,8 @@ public class Makieta extends JFrame {
         return textFieldDodajSklep.getText().trim();
     }
 
-    public void aktywujPrzycisk() {
-        String nazwaKategorii = pobierzKategorie();
-        boolean maNazweKategorii = (nazwaKategorii.length() > 0);
-        dodajKategorie.setEnabled(maNazweKategorii);
-        String nazwaProduktu = pobierzProdukt();
-        String nazwaSklepu = pobierzSklep();
-        boolean maNazweProduktu = (nazwaProduktu.length() > 0);
-        boolean maNazweSklepu = (nazwaSklepu.length() > 0);
-        dodajProdukt.setEnabled(maNazweProduktu);
-        dodajSklep.setEnabled(maNazweSklepu);
+    public String pobierzWartoscDoEdycji() {
+        return textFieldElementListyZakupow.getText();
     }
 
     private void findPattern(String text) throws IOException {
@@ -433,5 +458,16 @@ public class Makieta extends JFrame {
             }
         }
 
+    }
+
+    private void edTextValueChanged(DocumentEvent e) {
+        String text = textFieldElementListyZakupow.getText();
+        if(text == null || text.length() == 0) {
+            //this.text = text;
+            button_edytujElement.setEnabled(false);
+            return;
+        } else {
+            button_edytujElement.setEnabled(true);
+        }
     }
 }
