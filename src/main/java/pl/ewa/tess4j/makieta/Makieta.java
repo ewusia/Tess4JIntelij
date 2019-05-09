@@ -15,9 +15,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -270,6 +268,38 @@ public class Makieta extends JFrame {
             }
         });
 
+        textFieldDodajProdukt.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    labelMessage.setText("");
+                    DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+                    if (wybranaGalaz == null) {
+                        labelMessage.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
+                    } else {
+                        if (!wybranaGalaz.isRoot()) {
+                            TreeNode parent = wybranaGalaz.getParent();
+                            boolean equals = parent.equals(wybranaGalaz.getRoot());
+                            if (equals) {
+                                if (!pobierzProdukt().equals("")) {
+                                    Kategoria kategoriaDB = (Kategoria) wybranaGalaz.getUserObject();
+                                    Produkt produktDB = new Produkt(textFieldDodajProdukt.getText());
+                                    kategoriaDB.addProdukt(produktDB);
+                                    wybranaGalaz.add(new DefaultMutableTreeNode(produktDB));
+                                    ((DefaultTreeModel) treeProduktow.getModel()).reload(wybranaGalaz);;
+                                } else {
+                                    labelMessage.setText("Musisz wpisac nazwe produktu");
+                                }
+                            } else {
+                                labelMessage.setText("Nie mozna dodac produktu do produktu ani sklepu");
+                            }
+                        } else {
+                            labelMessage.setText("Musisz wybrac kategorie");
+                        }
+                    }
+                }
+            }
+        });
         dodajProdukt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -287,7 +317,7 @@ public class Makieta extends JFrame {
                                 Produkt produktDB = new Produkt(textFieldDodajProdukt.getText());
                                 kategoriaDB.addProdukt(produktDB);
                                 wybranaGalaz.add(new DefaultMutableTreeNode(produktDB));
-                                ((DefaultTreeModel) treeProduktow.getModel()).reload();
+                                ((DefaultTreeModel) treeProduktow.getModel()).reload(wybranaGalaz);;
                             } else {
                                 labelMessage.setText("Musisz wpisac nazwe produktu");
                             }
