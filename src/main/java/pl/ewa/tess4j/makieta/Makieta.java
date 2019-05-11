@@ -50,7 +50,7 @@ public class Makieta extends JFrame {
     private JButton usunZListyZakupow;
     private JList listProduktow;
     private JTree treeProduktow;
-    private JTextField textFieldElementListyZakupow;
+    private JTextField textFieldElementListyProduktow;
     private JTextField textFieldDodawanyEl;
     private JButton dodajKategorie;
     private JButton usunButton;
@@ -85,7 +85,7 @@ public class Makieta extends JFrame {
             @Override public void removeUpdate(DocumentEvent e) { aktywujPrzyciki(); }
             @Override public void changedUpdate(DocumentEvent e) { aktywujPrzyciki(); }
         };
-        textFieldElementListyZakupow.getDocument().addDocumentListener(listener);
+        textFieldElementListyProduktow.getDocument().addDocumentListener(listener);
         textFielddodajKat.getDocument().addDocumentListener(listener);
         textFieldDodajProdukt.getDocument().addDocumentListener(listener);
         textFieldDodajSklep.getDocument().addDocumentListener(listener);
@@ -219,46 +219,42 @@ public class Makieta extends JFrame {
                 System.exit(0);
             }
         });
-
+        // pozwala na edycje wybranego elementu galezi
         treeProduktow.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-
-                if (treeProduktow.isSelectionEmpty())
-                    return;
-                TreePath tp = treeProduktow.getSelectionPath();
-                DefaultMutableTreeNode defaultMutableTreeNode =
-                        (DefaultMutableTreeNode) tp.getLastPathComponent();
-                String element = defaultMutableTreeNode.getUserObject().toString();
-                textFieldElementListyZakupow.setText(element.trim());
+                edytujWybranyElementDrzewa();
             }
         });
+        // pozwala ENTEREM dokonac edycji
+        /*textFieldElementListyProduktow.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    dodajProduktDoKategorii();
+                }
+            }
+        });*/
 
         usunButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 usunWybranyElementDrzewa(model);
             }
-
         });
 
         KeyListener kl = new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
-
             }
-
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_DELETE)
-                {
+                if(e.getKeyCode() == KeyEvent.VK_DELETE) {
                     usunWybranyElementDrzewa(model);
                 }
             }
-
             @Override
             public void keyReleased(KeyEvent e) {
-
             }
         };
         treeProduktow.addKeyListener(kl);
@@ -331,7 +327,7 @@ public class Makieta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
                 Nameable userObject = (Nameable) wybranaGalaz.getUserObject();
-                userObject.setName(textFieldElementListyZakupow.getText());
+                userObject.setName(textFieldElementListyProduktow.getText());
                 DefaultTreeModel model = (DefaultTreeModel) treeProduktow.getModel();
                 model.reload();
                 saveDB();
@@ -339,6 +335,16 @@ public class Makieta extends JFrame {
 
             }
         });
+    }
+
+    private void edytujWybranyElementDrzewa() {
+        if (treeProduktow.isSelectionEmpty())
+            return;
+        TreePath sciezkaDrzewa = treeProduktow.getSelectionPath();
+        DefaultMutableTreeNode defaultMutableTreeNode =
+                (DefaultMutableTreeNode) sciezkaDrzewa.getLastPathComponent();
+        String element = defaultMutableTreeNode.getUserObject().toString();
+        textFieldElementListyProduktow.setText(element.trim());
     }
 
     private void usunWybranyElementDrzewa(DefaultTreeModel model) {
@@ -396,7 +402,7 @@ public class Makieta extends JFrame {
 
     public void aktywujPrzyciki()
     {
-        String wartoscDoEdycji = textFieldElementListyZakupow.getText();
+        String wartoscDoEdycji = textFieldElementListyProduktow.getText();
         boolean maWartoscDoEdycji=(wartoscDoEdycji.length()>0);
         button_edytujElement.setEnabled(maWartoscDoEdycji);
 
@@ -424,7 +430,7 @@ public class Makieta extends JFrame {
     }
 
     public String pobierzWartoscDoEdycji() {
-        return textFieldElementListyZakupow.getText();
+        return textFieldElementListyProduktow.getText();
     }
 
     private void findPattern(String text) throws IOException {
@@ -498,7 +504,7 @@ public class Makieta extends JFrame {
     }
 
     private void edTextValueChanged(DocumentEvent e) {
-        String text = textFieldElementListyZakupow.getText();
+        String text = textFieldElementListyProduktow.getText();
         if(text == null || text.length() == 0) {
             //this.text = text;
             button_edytujElement.setEnabled(false);
