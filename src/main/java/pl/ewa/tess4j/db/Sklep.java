@@ -11,14 +11,6 @@ public class Sklep implements Nameable {
     public Sklep() {
     }
 
-    public String getNazwa() {
-        return nazwa;
-    }
-
-    public void setNazwa(String nazwa) {
-        this.nazwa = nazwa;
-    }
-
     @Override
     public String toString() {
         return nazwa;
@@ -31,6 +23,5 @@ public class Sklep implements Nameable {
 
     @Override
     public void setName(String nazwa) {
-        this.setNazwa(nazwa);
-    }
+        this.nazwa = nazwa;    }
 }

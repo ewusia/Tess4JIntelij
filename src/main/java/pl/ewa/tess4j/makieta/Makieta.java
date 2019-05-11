@@ -62,7 +62,6 @@ public class Makieta extends JFrame {
     private JLabel labelDodajKategorie;
     private JLabel labelDodajPodKategorie;
     private JTextField tF_DodajSklep;
-    private JTextField textFielddodajKat;
     private JLabel labelDodajSklep;
     private JButton dodajSklep;
     private JButton button_edytujElement;
@@ -74,6 +73,7 @@ public class Makieta extends JFrame {
     private JButton zapiszListeDoPlikuButton;
     private JTextArea textAreaSuma;
     private JLabel label_Message;
+    private JTextField tF_DodajKategorie;
     private JLabel selectedLabel;
 
 
@@ -86,7 +86,7 @@ public class Makieta extends JFrame {
             @Override public void changedUpdate(DocumentEvent e) { aktywujPrzyciki(); }
         };
         textFieldElementListyProduktow.getDocument().addDocumentListener(listener);
-        textFielddodajKat.getDocument().addDocumentListener(listener);
+        tF_DodajKategorie.getDocument().addDocumentListener(listener);
         tF_DodajProdukt.getDocument().addDocumentListener(listener);
         tF_DodajSklep.getDocument().addDocumentListener(listener);
         aktywujPrzyciki();
@@ -259,35 +259,19 @@ public class Makieta extends JFrame {
         };
         treeProduktow.addKeyListener(kl);
 
+        tF_DodajKategorie.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    dodajProduktDoKategorii();
+                }
+            }
+        });
+
         dodajKategorie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                label_Message.setText("");
-                DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) /*model.getRoot()*/treeProduktow.getLastSelectedPathComponent();;
-                if (wybranaGalaz == null) {
-                    label_Message.setText("Musisz wybrac galaz glowna, a nastepnie wpisac nazwe kategorii");
-                } else {
-                    if (wybranaGalaz.isRoot()) {
-                        int poziom = wybranaGalaz.getLevel();
-                        if (poziom == 0) {
-                            if (!pobierzKategorie().trim().equals("")) {
-                                DB nadKategroriaDB = (DB) wybranaGalaz.getUserObject();
-                                Kategoria kategoriaDB = new Kategoria(textFielddodajKat.getText());
-                                nadKategroriaDB.addKategoria(kategoriaDB);
-                                wybranaGalaz.add(new DefaultMutableTreeNode(kategoriaDB));
-                                ((DefaultTreeModel) treeProduktow.getModel()).reload();
-                                textFielddodajKat.setText("");
-                            } else {
-                                label_Message.setText("Musisz wpisac nazwe kategorii");
-                            }
-                        } else {
-                            label_Message.setText("Kategoria musi byc dodana do galezi glownej");
-                        }
-                    } else {
-                        label_Message.setText("Musisz wybrac galaz glowna");
-                    }
-                }
-                aktywujPrzyciki();
+                dodajKategorieDoDrzewa(model);
             }
         });
 
@@ -335,6 +319,37 @@ public class Makieta extends JFrame {
 
             }
         });
+    }
+
+    private void dodajKategorieDoDrzewa(DefaultTreeModel model) {
+        label_Message.setText("");
+        DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) model.getRoot();
+        if (wybranaGalaz == null) {
+            label_Message.setText("Musisz wybrac galaz glowna, a nastepnie wpisac nazwe kategorii");
+        } else {
+            Object root = model.getRoot();
+            /*if (wybranaGalaz.e) {*/
+                int poziom = wybranaGalaz.getLevel();
+                if (poziom == 0) {
+                        //DB nadKategroriaDB = (DB) wybranaGalaz.getUserObject();
+                        Kategoria kategoriaDB = new Kategoria(tF_DodajKategorie.getText());
+                        //nadKategroriaDB.addKategoria(kategoriaDB);
+                        wybranaGalaz.add(new DefaultMutableTreeNode(kategoriaDB));
+                        ((DefaultTreeModel) treeProduktow.getModel()).reload();
+                    tF_DodajKategorie.setText("");
+                        /*              Kategoria userObject = (Kategoria) galazGlowna.getUserObject();
+        Kategoria kategoria = new Kategoria(tF_DodajKategorie.getText());
+        if (!pobierzKategorie().equals("")) {
+            galazGlowna.add(new DefaultMutableTreeNode(tF_DodajKategorie.getText()));
+            model.reload();*/
+                } else {
+                    label_Message.setText("Kategoria musi byc dodana do galezi glownej");
+                }
+            /*} else {
+                label_Message.setText("Musisz wybrac galaz glowna");
+            }*/
+        }
+        aktywujPrzyciki();
     }
 
     private void dodajSklepDoProduktu() {
@@ -447,7 +462,7 @@ public class Makieta extends JFrame {
     }
 
     public String pobierzKategorie() {
-        return textFielddodajKat.getText().trim();
+        return tF_DodajKategorie.getText().trim();
     }
 
     public String pobierzProdukt() {

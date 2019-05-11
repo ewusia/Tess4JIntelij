@@ -3,8 +3,9 @@ package pl.ewa.tess4j.db;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DB {
+public class DB implements Nameable{
 
+    private String nazwa = "";
     private List<Kategoria> kategorie = new ArrayList<>();
 
     public DB(List<Kategoria> kategorie) {
@@ -12,6 +13,15 @@ public class DB {
     }
 
     public DB() {
+    }
+
+    public DB(String nazwa) {
+        this.nazwa = nazwa;
+    }
+
+    public DB(String nazwa, List<Kategoria> kategorie) {
+        this.nazwa = nazwa;
+        this.kategorie = kategorie;
     }
 
     public List<Kategoria> getKategorie() {
@@ -26,10 +36,27 @@ public class DB {
         this.kategorie.add(kategoria);
     }
 
-    @Override
+/*    @Override
     public String toString() {
         return "DB{" +
                 "kategorie=" + kategorie.stream().map(k -> k.toString()) +
                 '}';
+    }*/
+    @Override
+    public String toString() {
+        return nazwa;
     }
+
+
+    @Override
+    public String getName() {
+        return nazwa;
+    }
+
+    @Override
+    public void setName(String nazwa) {
+        this.nazwa = nazwa;
+    }
+
+
 }
