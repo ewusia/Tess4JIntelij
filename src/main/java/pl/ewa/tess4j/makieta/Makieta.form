@@ -76,7 +76,7 @@
           <text value="Tresc paragonu"/>
         </properties>
       </component>
-      <component id="c4ae4" class="javax.swing.JTextField" binding="textFieldDodajProdukt">
+      <component id="c4ae4" class="javax.swing.JTextField" binding="tF_DodajProdukt">
         <constraints>
           <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -123,7 +123,7 @@
           <text value="Dodaj nazwe produktu"/>
         </properties>
       </component>
-      <component id="ddda5" class="javax.swing.JTextField" binding="textFieldDodajSklep">
+      <component id="ddda5" class="javax.swing.JTextField" binding="tF_DodajSklep">
         <constraints>
           <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -250,16 +250,6 @@
           <text value="Suma"/>
         </properties>
       </component>
-      <component id="d1790" class="javax.swing.JLabel" binding="labelMessage">
-        <constraints>
-          <grid row="11" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <font name="Consolas" style="1"/>
-          <foreground color="-1885659"/>
-          <text value="*"/>
-        </properties>
-      </component>
       <component id="67867" class="javax.swing.JTextField" binding="textFieldElementListyProduktow">
         <constraints>
           <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
@@ -340,6 +330,16 @@
         </constraints>
         <properties>
           <text value="Czesc paragonu dotyczaca produktow"/>
+        </properties>
+      </component>
+      <component id="d1790" class="javax.swing.JLabel" binding="label_Message">
+        <constraints>
+          <grid row="11" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Consolas" style="1"/>
+          <foreground color="-1885659"/>
+          <text value="*"/>
         </properties>
       </component>
     </children>

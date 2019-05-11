@@ -57,11 +57,11 @@ public class Makieta extends JFrame {
     private JLabel labelEl;
     private JLabel labelNadPattern;
     private JLabel labelWyswietlaniePatagonu;
-    private JTextField textFieldDodajProdukt;
+    private JTextField tF_DodajProdukt;
     private JButton dodajProdukt;
     private JLabel labelDodajKategorie;
     private JLabel labelDodajPodKategorie;
-    private JTextField textFieldDodajSklep;
+    private JTextField tF_DodajSklep;
     private JTextField textFielddodajKat;
     private JLabel labelDodajSklep;
     private JButton dodajSklep;
@@ -73,7 +73,7 @@ public class Makieta extends JFrame {
     private JButton buttonEdytujProduktZListyZakupow;
     private JButton zapiszListeDoPlikuButton;
     private JTextArea textAreaSuma;
-    private JLabel labelMessage;
+    private JLabel label_Message;
     private JLabel selectedLabel;
 
 
@@ -87,8 +87,8 @@ public class Makieta extends JFrame {
         };
         textFieldElementListyProduktow.getDocument().addDocumentListener(listener);
         textFielddodajKat.getDocument().addDocumentListener(listener);
-        textFieldDodajProdukt.getDocument().addDocumentListener(listener);
-        textFieldDodajSklep.getDocument().addDocumentListener(listener);
+        tF_DodajProdukt.getDocument().addDocumentListener(listener);
+        tF_DodajSklep.getDocument().addDocumentListener(listener);
         aktywujPrzyciki();
 
         JTree t = tr.getTree();
@@ -262,21 +262,36 @@ public class Makieta extends JFrame {
         dodajKategorie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                labelMessage.setText("");
-                DefaultMutableTreeNode galazGlowna = (DefaultMutableTreeNode) model.getRoot();
-                Kategoria userObject = (Kategoria) galazGlowna.getUserObject();
-                Kategoria kategoria = new Kategoria(textFielddodajKat.getText());
-                if (!pobierzKategorie().equals("")) {
-                    galazGlowna.add(new DefaultMutableTreeNode(textFielddodajKat.getText()));
-                    model.reload();
+                label_Message.setText("");
+                DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) /*model.getRoot()*/treeProduktow.getLastSelectedPathComponent();;
+                if (wybranaGalaz == null) {
+                    label_Message.setText("Musisz wybrac galaz glowna, a nastepnie wpisac nazwe kategorii");
                 } else {
-                    labelMessage.setText("Musisz wpisac kategorie");
+                    if (wybranaGalaz.isRoot()) {
+                        int poziom = wybranaGalaz.getLevel();
+                        if (poziom == 0) {
+                            if (!pobierzKategorie().trim().equals("")) {
+                                DB nadKategroriaDB = (DB) wybranaGalaz.getUserObject();
+                                Kategoria kategoriaDB = new Kategoria(textFielddodajKat.getText());
+                                nadKategroriaDB.addKategoria(kategoriaDB);
+                                wybranaGalaz.add(new DefaultMutableTreeNode(kategoriaDB));
+                                ((DefaultTreeModel) treeProduktow.getModel()).reload();
+                                textFielddodajKat.setText("");
+                            } else {
+                                label_Message.setText("Musisz wpisac nazwe kategorii");
+                            }
+                        } else {
+                            label_Message.setText("Kategoria musi byc dodana do galezi glownej");
+                        }
+                    } else {
+                        label_Message.setText("Musisz wybrac galaz glowna");
+                    }
                 }
                 aktywujPrzyciki();
             }
         });
 
-        textFieldDodajProdukt.addKeyListener(new KeyAdapter() {
+        tF_DodajProdukt.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -291,34 +306,19 @@ public class Makieta extends JFrame {
             }
         });
 
+        tF_DodajSklep.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    dodajSklepDoProduktu();
+                }
+            }
+        });
+
         dodajSklep.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                labelMessage.setText("");
-                DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
-                if (wybranaGalaz == null) {
-                    labelMessage.setText("Musisz wybrac produkt, a nastepnie wpisac nazwe sklepu");
-                } else {
-                    if (!wybranaGalaz.isRoot()) {
-                        int poziom = wybranaGalaz.getLevel();
-                        if (poziom == 2) {
-                            if (!pobierzSklep().trim().equals("")) {
-                                Produkt produktDB = (Produkt) wybranaGalaz.getUserObject();
-                                Sklep sklepDB = new Sklep(textFieldDodajSklep.getText());
-                                produktDB.addSklep(sklepDB);
-                                wybranaGalaz.add(new DefaultMutableTreeNode(sklepDB));
-                                ((DefaultTreeModel) treeProduktow.getModel()).reload();
-                            } else {
-                                labelMessage.setText("Musisz wpisac nazwe sklepu");
-                            }
-                        } else {
-                            labelMessage.setText("Nie mozna dodac sklepu do kategorii ani sklepu");
-                        }
-                    } else {
-                        labelMessage.setText("Musisz wybrac produkt");
-                    }
-                }
-                aktywujPrzyciki();
+                dodajSklepDoProduktu();
             }
         });
 
@@ -337,6 +337,35 @@ public class Makieta extends JFrame {
         });
     }
 
+    private void dodajSklepDoProduktu() {
+        label_Message.setText("");
+        DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
+        if (wybranaGalaz == null) {
+            label_Message.setText("Musisz wybrac produkt, a nastepnie wpisac nazwe sklepu");
+        } else {
+            if (!wybranaGalaz.isRoot()) {
+                int poziom = wybranaGalaz.getLevel();
+                if (poziom == 2) {
+                    if (!pobierzSklep().trim().equals("")) {
+                        Produkt produktDB = (Produkt) wybranaGalaz.getUserObject();
+                        Sklep sklepDB = new Sklep(tF_DodajSklep.getText());
+                        produktDB.addSklep(sklepDB);
+                        wybranaGalaz.add(new DefaultMutableTreeNode(sklepDB));
+                        ((DefaultTreeModel) treeProduktow.getModel()).reload(wybranaGalaz);
+                        tF_DodajSklep.setText("");
+                    } else {
+                        label_Message.setText("Musisz wpisac nazwe sklepu");
+                    }
+                } else {
+                    label_Message.setText("Nie mozna dodac sklepu do kategorii ani sklepu");
+                }
+            } else {
+                label_Message.setText("Musisz wybrac produkt");
+            }
+        }
+        aktywujPrzyciki();
+    }
+
     private void edytujWybranyElementDrzewa() {
         if (treeProduktow.isSelectionEmpty())
             return;
@@ -348,25 +377,25 @@ public class Makieta extends JFrame {
     }
 
     private void usunWybranyElementDrzewa(DefaultTreeModel model) {
-        labelMessage.setText("");
+        label_Message.setText("");
         DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
         if (wybranaGalaz.isRoot()) {
-            labelMessage.setText("Nie mozesz skasowac galezi glownej");
+            label_Message.setText("Nie mozesz skasowac galezi glownej");
         } else {
             if (wybranaGalaz != null) {
                 model.removeNodeFromParent(wybranaGalaz);
             } else {
-                labelMessage.setText("Musisz wybrac kategorie lub podkategorie do usuniecia");
+                label_Message.setText("Musisz wybrac kategorie lub podkategorie do usuniecia");
             }
         }
         saveDB();
     }
 
     private void dodajProduktDoKategorii() {
-        labelMessage.setText("");
+        label_Message.setText("");
         DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getLastSelectedPathComponent();
         if (wybranaGalaz == null) {
-            labelMessage.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
+            label_Message.setText("Musisz wybrac podkategorie, a nastepnie wpisac nazwe produktu");
         } else {
             if (!wybranaGalaz.isRoot()) {
                 TreeNode parent = wybranaGalaz.getParent();
@@ -374,19 +403,19 @@ public class Makieta extends JFrame {
                 if (equals) {
                     if (!pobierzProdukt().equals("")) {
                         Kategoria kategoriaDB = (Kategoria) wybranaGalaz.getUserObject();
-                        Produkt produktDB = new Produkt(textFieldDodajProdukt.getText());
+                        Produkt produktDB = new Produkt(tF_DodajProdukt.getText());
                         kategoriaDB.addProdukt(produktDB);
                         wybranaGalaz.add(new DefaultMutableTreeNode(produktDB));
                         ((DefaultTreeModel) treeProduktow.getModel()).reload(wybranaGalaz);
-                        textFieldDodajProdukt.setText(""); // czysci pole po dodaniu produktu
+                        tF_DodajProdukt.setText(""); // czysci pole po dodaniu produktu
                     } else {
-                        labelMessage.setText("Musisz wpisac nazwe produktu");
+                        label_Message.setText("Musisz wpisac nazwe produktu");
                     }
                 } else {
-                    labelMessage.setText("Nie mozna dodac produktu do produktu ani sklepu");
+                    label_Message.setText("Nie mozna dodac produktu do produktu ani sklepu");
                 }
             } else {
-                labelMessage.setText("Musisz wybrac kategorie");
+                label_Message.setText("Musisz wybrac kategorie");
             }
         }
         aktywujPrzyciki();
@@ -422,11 +451,11 @@ public class Makieta extends JFrame {
     }
 
     public String pobierzProdukt() {
-        return textFieldDodajProdukt.getText().trim();
+        return tF_DodajProdukt.getText().trim();
     }
 
     public String pobierzSklep() {
-        return textFieldDodajSklep.getText().trim();
+        return tF_DodajSklep.getText().trim();
     }
 
     public String pobierzWartoscDoEdycji() {
