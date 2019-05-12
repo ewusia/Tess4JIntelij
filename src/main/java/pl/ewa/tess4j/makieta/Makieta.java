@@ -69,6 +69,7 @@ public class Makieta extends JFrame {
     private JLabel label_Message;
     private JTextField tF_DodajKategorie;
     private JButton button_UsunListaZakupow;
+    private JButton button_DodajCene;
     private JLabel selectedLabel;
 
     private DefaultListModel<RowItem> listaZakupowModel = new DefaultListModel<>();

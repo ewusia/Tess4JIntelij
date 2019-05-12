@@ -275,30 +275,6 @@
           <text value="Zamknij"/>
         </properties>
       </component>
-      <component id="d19eb" class="javax.swing.JButton" binding="zapiszListeDoPlikuButton" default-binding="true">
-        <constraints>
-          <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Zapisz liste do pliku"/>
-        </properties>
-      </component>
-      <component id="e3908" class="javax.swing.JButton" binding="button_EdytujOrazProduktZListyZakupow">
-        <constraints>
-          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Edytuj wpis z listy"/>
-        </properties>
-      </component>
-      <component id="c6822" class="javax.swing.JButton" binding="button_UsunListaZakupow">
-        <constraints>
-          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Usun wpis z listy"/>
-        </properties>
-      </component>
       <component id="766f1" class="javax.swing.JButton" binding="button_zListyProdDoZakupow">
         <constraints>
           <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -307,6 +283,38 @@
           <actionCommand value="zListyProdDoZakupow"/>
           <label value="&gt;&gt;"/>
           <text value="&gt;&gt;"/>
+        </properties>
+      </component>
+      <component id="d19eb" class="javax.swing.JButton" binding="zapiszListeDoPlikuButton" default-binding="true">
+        <constraints>
+          <grid row="11" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Zapisz liste do pliku"/>
+        </properties>
+      </component>
+      <component id="c6822" class="javax.swing.JButton" binding="button_UsunListaZakupow">
+        <constraints>
+          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Usun wpis z listy"/>
+        </properties>
+      </component>
+      <component id="e3908" class="javax.swing.JButton" binding="button_EdytujOrazProduktZListyZakupow">
+        <constraints>
+          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Edytuj wpis z listy"/>
+        </properties>
+      </component>
+      <component id="54094" class="javax.swing.JButton" binding="button_DodajCene">
+        <constraints>
+          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Dodaj cene do wpisu"/>
         </properties>
       </component>
     </children>
