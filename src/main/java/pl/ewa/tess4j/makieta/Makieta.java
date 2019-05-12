@@ -46,7 +46,6 @@ public class Makieta extends JFrame {
     private JLabel labelListaZakupow;
     private JLabel labelListaProduktow;
     private JButton button_zListyProdDoZakupow;
-    private JButton usunZListyZakupow;
     private JList listProduktow;
     private JTree treeProduktow;
     private JTextField textFieldElementListyProduktow;
@@ -64,10 +63,6 @@ public class Makieta extends JFrame {
     private JLabel labelDodajSklep;
     private JButton button_DodajSklep;
     private JButton button_EdytujElement;
-    private JLabel labelSklep;
-    private JLabel labelCena;
-    private JLabel labelProdukt;
-    private JLabel labelIlosc;
     private JButton button_EdytujOrazProduktZListyZakupow;
     private JButton zapiszListeDoPlikuButton;
     private JTextArea textAreaSuma;
@@ -335,13 +330,12 @@ public class Makieta extends JFrame {
                 Nameable userObject = (Nameable) wybranaGalaz.getUserObject();
                 String element = textFieldElementListyProduktow.getText();
                 userObject.setName(element);
-                //DefaultTreeModel model = (DefaultTreeModel) treeProduktow.getModel();
-                // to samo do tad
                 int poziom = wybranaGalaz.getLevel();
                 if (poziom == 0 || poziom == 1) {
                     button_zListyProdDoZakupow.setEnabled(false);
                 } else {
                     if (poziom == 2) {
+                        button_zListyProdDoZakupow.setEnabled(true);
                         Object wybranyProdukt = wybranaGalaz.getUserObject();
                         TreeNode sklep = wybranaGalaz.getFirstChild();
                         /*String produktSklep = (wybranyProdukt + "\t" + sklep);
@@ -349,6 +343,7 @@ public class Makieta extends JFrame {
                         dodajDoModeluListyZakupow(wybranyProdukt, sklep);
                     }
                     if (poziom == 3) {
+                        button_zListyProdDoZakupow.setEnabled(true);
                         Object wybranySklep = wybranaGalaz.getUserObject();
                         TreeNode produkt = wybranaGalaz.getParent();
                         /*String sklepProdukt = (produkt + "\t" + wybranySklep);
@@ -510,7 +505,9 @@ public class Makieta extends JFrame {
     public static void main(String args[]) {
         JFrame frame = new JFrame("Makieta");
         frame.setContentPane(new Makieta().panelGlowny);
-        frame.setSize(1100, 700);
+        frame.setSize(1200, 700);
+        /*        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true)*/
         frame.setVisible(true);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
