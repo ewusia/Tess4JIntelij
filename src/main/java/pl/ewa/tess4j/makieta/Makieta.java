@@ -33,7 +33,6 @@ import static pl.ewa.tess4j.db.DBService.saveDB;
 
 public class Makieta extends JFrame {
 
-
     private static TworzenieDrzewa tr = new TworzenieDrzewa();
     DefaultMutableTreeNode selectedNode;
     private JTextArea jTextAreaListaProduktow;
@@ -43,41 +42,50 @@ public class Makieta extends JFrame {
     private JButton otwórzPlikButton;
     private JButton zamknijButton;
     private JPanel panelGlowny;
-    private JList listZakupow;
+    private JList lista_Zakupow;
     private JLabel labelListaZakupow;
     private JLabel labelListaProduktow;
-    private JButton zListyProdDoZakupow;
+    private JButton button_zListyProdDoZakupow;
     private JButton usunZListyZakupow;
     private JList listProduktow;
     private JTree treeProduktow;
     private JTextField textFieldElementListyProduktow;
     private JTextField textFieldDodawanyEl;
-    private JButton dodajKategorie;
+    private JButton button_DodajKategorie;
     private JButton usunButton;
     private JLabel labelEl;
     private JLabel labelNadPattern;
     private JLabel labelWyswietlaniePatagonu;
     private JTextField tF_DodajProdukt;
-    private JButton dodajProdukt;
+    private JButton button_DodajProdukt;
     private JLabel labelDodajKategorie;
     private JLabel labelDodajPodKategorie;
     private JTextField tF_DodajSklep;
     private JLabel labelDodajSklep;
-    private JButton dodajSklep;
-    private JButton button_edytujElement;
+    private JButton button_DodajSklep;
+    private JButton button_EdytujElement;
     private JLabel labelSklep;
     private JLabel labelCena;
     private JLabel labelProdukt;
     private JLabel labelIlosc;
-    private JButton buttonEdytujProduktZListyZakupow;
+    private JButton button_EdytujOrazProduktZListyZakupow;
     private JButton zapiszListeDoPlikuButton;
     private JTextArea textAreaSuma;
     private JLabel label_Message;
     private JTextField tF_DodajKategorie;
+    private JButton button_UsunListaZakupow;
     private JLabel selectedLabel;
 
+    private DefaultListModel<RowItem> listaZakupowModel = new DefaultListModel<>();
+
+    private Object produkt;
+    private Object sklep;
 
     public Makieta() {
+
+        lista_Zakupow.setModel(listaZakupowModel);
+        button_UsunListaZakupow.setEnabled(false);
+        button_zListyProdDoZakupow.setEnabled(false);
 
         DocumentListener listener=new DocumentListener()
         {
@@ -112,9 +120,9 @@ public class Makieta extends JFrame {
                         DefaultMutableTreeNode sklepNode = (DefaultMutableTreeNode) produktNode.getChildAt(s);
                         Sklep sklep = (Sklep) sklepNode.getUserObject();
 
-                        DBService.getDb().addKategoria(kategoria);
                     }
                 }
+                DBService.getDb().addKategoria(kategoria);
             }
 
 
@@ -268,7 +276,7 @@ public class Makieta extends JFrame {
             }
         });
 
-        dodajKategorie.addActionListener(new ActionListener() {
+        button_DodajKategorie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dodajKategorieDoDrzewa(model);
@@ -283,7 +291,7 @@ public class Makieta extends JFrame {
                 }
             }
         });
-        dodajProdukt.addActionListener(new ActionListener() {
+        button_DodajProdukt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dodajProduktDoKategorii();
@@ -299,26 +307,89 @@ public class Makieta extends JFrame {
             }
         });
 
-        dodajSklep.addActionListener(new ActionListener() {
+        button_DodajSklep.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dodajSklepDoProduktu();
             }
         });
 
-        button_edytujElement.addActionListener(new ActionListener() {
+        button_EdytujElement.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
                 Nameable userObject = (Nameable) wybranaGalaz.getUserObject();
-                userObject.setName(textFieldElementListyProduktow.getText());
+                String element = textFieldElementListyProduktow.getText();
+                userObject.setName(element);
                 DefaultTreeModel model = (DefaultTreeModel) treeProduktow.getModel();
-                model.reload();
+                model.reload(wybranaGalaz);
                 saveDB();
                 aktywujPrzyciki();
 
             }
         });
+        button_zListyProdDoZakupow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
+                Nameable userObject = (Nameable) wybranaGalaz.getUserObject();
+                String element = textFieldElementListyProduktow.getText();
+                userObject.setName(element);
+                //DefaultTreeModel model = (DefaultTreeModel) treeProduktow.getModel();
+                // to samo do tad
+                int poziom = wybranaGalaz.getLevel();
+                if (poziom == 0 || poziom == 1) {
+                    button_zListyProdDoZakupow.setEnabled(false);
+                } else {
+                    if (poziom == 2) {
+                        Object wybranyProdukt = wybranaGalaz.getUserObject();
+                        TreeNode sklep = wybranaGalaz.getFirstChild();
+                        /*String produktSklep = (wybranyProdukt + "\t" + sklep);
+                        System.out.println(produktSklep);*/
+                        dodajDoModeluListyZakupow(wybranyProdukt, sklep);
+                    }
+                    if (poziom == 3) {
+                        Object wybranySklep = wybranaGalaz.getUserObject();
+                        TreeNode produkt = wybranaGalaz.getParent();
+                        /*String sklepProdukt = (produkt + "\t" + wybranySklep);
+                        System.out.println(sklepProdukt);*/
+                        dodajDoModeluListyZakupow(wybranySklep, produkt);
+                    }
+                }
+                saveDB();
+                aktywujPrzyciki();
+
+            }
+        });
+        button_UsunListaZakupow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int idx = lista_Zakupow.getSelectedIndex();
+                listaZakupowModel.removeElementAt(idx);
+
+
+                if(idx < listaZakupowModel.getSize()) {
+                    lista_Zakupow.setSelectedIndex(idx);
+                } else {
+                    lista_Zakupow.setSelectedIndex(idx-1);
+                }
+
+
+                if(listaZakupowModel.size() == 0) {
+                    button_UsunListaZakupow.setEnabled(false);
+                } else {
+                    button_UsunListaZakupow.setEnabled(true);
+                }
+            }
+        });
+    }
+
+    private void dodajDoModeluListyZakupow(Object wybrany, TreeNode powiazany) {
+        RowItem pozycja = new RowItem(wybrany, powiazany);
+
+        listaZakupowModel.addElement(pozycja);
+        lista_Zakupow.setSelectedIndex(listaZakupowModel.getSize() - 1);
+        button_UsunListaZakupow.setEnabled(true);
     }
 
     private void dodajKategorieDoDrzewa(DefaultTreeModel model) {
@@ -331,9 +402,9 @@ public class Makieta extends JFrame {
             /*if (wybranaGalaz.e) {*/
                 int poziom = wybranaGalaz.getLevel();
                 if (poziom == 0) {
-                        //DB nadKategroriaDB = (DB) wybranaGalaz.getUserObject();
+                        DB nadKategroriaDB = (DB) wybranaGalaz.getUserObject();
                         Kategoria kategoriaDB = new Kategoria(tF_DodajKategorie.getText());
-                        //nadKategroriaDB.addKategoria(kategoriaDB);
+                        nadKategroriaDB.addKategoria(kategoriaDB);
                         wybranaGalaz.add(new DefaultMutableTreeNode(kategoriaDB));
                         ((DefaultTreeModel) treeProduktow.getModel()).reload();
                     tF_DodajKategorie.setText("");
@@ -448,17 +519,18 @@ public class Makieta extends JFrame {
     {
         String wartoscDoEdycji = textFieldElementListyProduktow.getText();
         boolean maWartoscDoEdycji=(wartoscDoEdycji.length()>0);
-        button_edytujElement.setEnabled(maWartoscDoEdycji);
+        button_EdytujElement.setEnabled(maWartoscDoEdycji);
+        button_zListyProdDoZakupow.setEnabled(maWartoscDoEdycji);
 
         String nazwaKategorii = pobierzKategorie();
         boolean maNazweKategorii = (nazwaKategorii.length() > 0);
-        dodajKategorie.setEnabled(maNazweKategorii);
+        button_DodajKategorie.setEnabled(maNazweKategorii);
         String nazwaProduktu = pobierzProdukt();
         String nazwaSklepu = pobierzSklep();
         boolean maNazweProduktu = (nazwaProduktu.length() > 0);
         boolean maNazweSklepu = (nazwaSklepu.length() > 0);
-        dodajProdukt.setEnabled(maNazweProduktu);
-        dodajSklep.setEnabled(maNazweSklepu);
+        button_DodajProdukt.setEnabled(maNazweProduktu);
+        button_DodajSklep.setEnabled(maNazweSklepu);
     }
 
     public String pobierzKategorie() {
@@ -551,10 +623,45 @@ public class Makieta extends JFrame {
         String text = textFieldElementListyProduktow.getText();
         if(text == null || text.length() == 0) {
             //this.text = text;
-            button_edytujElement.setEnabled(false);
+            button_EdytujElement.setEnabled(false);
             return;
         } else {
-            button_edytujElement.setEnabled(true);
+            button_EdytujElement.setEnabled(true);
         }
+    }
+
+    class RowItem
+    {
+        private Object produkt;
+        private Object sklep;
+
+        public RowItem(Object produkt, Object sklep) {
+            this.produkt = produkt;
+            this.sklep = sklep;
+        }
+
+        public Object getProdukt() {
+            return produkt;
+        }
+
+        public void setProdukt(Object produkt) {
+            this.produkt = produkt;
+        }
+
+        public Object getSklep() {
+            return sklep;
+        }
+
+        public void setSklep(Object sklep) {
+            this.sklep = sklep;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("\t\t\t %s \t\t\t %s", produkt, sklep);
+
+        }
+
+
     }
 }

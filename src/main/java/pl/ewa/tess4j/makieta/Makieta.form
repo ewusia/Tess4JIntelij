@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="panelGlowny" layout-manager="GridLayoutManager" row-count="17" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="21" y="20" width="1062" height="667"/>
+      <xy x="21" y="20" width="1116" height="667"/>
     </constraints>
     <properties>
       <preferredSize width="700" height="400"/>
@@ -86,7 +86,7 @@
           <inheritsPopupMenu value="true"/>
         </properties>
       </component>
-      <component id="65db2" class="javax.swing.JButton" binding="dodajKategorie">
+      <component id="65db2" class="javax.swing.JButton" binding="button_DodajKategorie">
         <constraints>
           <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -96,7 +96,7 @@
           <verifyInputWhenFocusTarget value="false"/>
         </properties>
       </component>
-      <component id="49bf4" class="javax.swing.JButton" binding="dodajProdukt">
+      <component id="49bf4" class="javax.swing.JButton" binding="button_DodajProdukt">
         <constraints>
           <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -141,7 +141,7 @@
           <text value="Dodaj sklep"/>
         </properties>
       </component>
-      <component id="e2f56" class="javax.swing.JButton" binding="dodajSklep">
+      <component id="e2f56" class="javax.swing.JButton" binding="button_DodajSklep">
         <constraints>
           <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -149,7 +149,7 @@
           <text value="&lt;&lt;"/>
         </properties>
       </component>
-      <component id="766f1" class="javax.swing.JButton" binding="zListyProdDoZakupow">
+      <component id="766f1" class="javax.swing.JButton" binding="button_zListyProdDoZakupow">
         <constraints>
           <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -167,7 +167,7 @@
           <text value="x"/>
         </properties>
       </component>
-      <component id="cad38" class="javax.swing.JButton" binding="button_edytujElement">
+      <component id="cad38" class="javax.swing.JButton" binding="button_EdytujElement">
         <constraints>
           <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -224,7 +224,7 @@
           <text value="Usun wpis z listy"/>
         </properties>
       </component>
-      <component id="e3908" class="javax.swing.JButton" binding="buttonEdytujProduktZListyZakupow">
+      <component id="e3908" class="javax.swing.JButton" binding="button_EdytujOrazProduktZListyZakupow">
         <constraints>
           <grid row="11" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -283,7 +283,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="b3721" class="javax.swing.JList" binding="listZakupow">
+          <component id="b3721" class="javax.swing.JList" binding="lista_Zakupow">
             <constraints/>
             <properties/>
           </component>
@@ -340,6 +340,14 @@
           <font name="Consolas" style="1"/>
           <foreground color="-1885659"/>
           <text value="*"/>
+        </properties>
+      </component>
+      <component id="c6822" class="javax.swing.JButton" binding="button_UsunListaZakupow">
+        <constraints>
+          <grid row="10" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Usun pozycje"/>
         </properties>
       </component>
     </children>
