@@ -74,19 +74,18 @@ public class Makieta extends JFrame {
     private JTextArea tA_ZakupyArea;
     private JLabel selectedLabel;
 
-    private DefaultListModel<RowItem> listaZakupowModel = new DefaultListModel<>();
+    private DefaultListModel<Object> listaZakupowModel = new DefaultListModel<>();
 
     private Object produkt;
     private Object sklep;
     private float cena = 0;
-    private BuilderDlaCeny builderDlaCeny = new BuilderDlaCeny();
 
     public Makieta() {
 
         lista_Zakupow.setModel(listaZakupowModel);
         button_UsunListaZakupow.setEnabled(false);
         button_zListyProdDoZakupow.setEnabled(false);
-//        button_DodajCene.setEnabled(false);
+        button_DodajCene.setEnabled(false);
 
         DocumentListener listener=new DocumentListener()
         {
@@ -337,7 +336,6 @@ public class Makieta extends JFrame {
                 przeniesListaProduktowDoZakupow();
                 saveDB();
                 aktywujPrzyciki();
-
             }
         });
         button_UsunListaZakupow.addActionListener(new ActionListener() {
@@ -361,36 +359,47 @@ public class Makieta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dodajCeneDoWpisu();
-/*                builderDlaCeny.add(cena);
-                wrocDoEdycji();*/
                 String przeniesListaProduktowDoZakupow = przeniesListaProduktowDoZakupow();
                 System.out.println(przeniesListaProduktowDoZakupow);
                 //lista_Zakupow.append(builderDlaCeny.toString()+"\n");
                 StringBuilder sb = new StringBuilder();
-                String append = String.valueOf(sb.append(przeniesListaProduktowDoZakupow).append(", ").append(cena));
-                tA_ZakupyArea.append(append);
-                //wrocDoEdycji();
+                String append = String.valueOf(sb.append(przeniesListaProduktowDoZakupow).append(",     ").append(cena).append("zl"));
+                //tA_ZakupyArea.append(append);
+                int wybrany = lista_Zakupow.getSelectedIndex();
+                listaZakupowModel.set(wybrany, append);
+
+
+                if(wybrany < listaZakupowModel.getSize()) {
+                    lista_Zakupow.setSelectedIndex(wybrany);
+                } else {
+                    lista_Zakupow.setSelectedIndex(wybrany-1);
+                }
+
+                tF_DodajCeneDoWpisu.setText("");
             }
         });
         tF_DodajCeneDoWpisu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String cenaStr = tF_DodajCeneDoWpisu.getText();
-                try {
-                    cena = (float) Double.parseDouble(cenaStr);
-                    button_DodajCene.setEnabled(true);
-                    int wybranyIndeks = lista_Zakupow.getSelectedIndex();
-
-
-                } catch(NumberFormatException ex) {
-                    button_DodajCene.setEnabled(false);
-                }
+                dodajCeneZPola();
+                tF_DodajCeneDoWpisu.setText("");
             }
         });
     }
 
-    private float dodajCeneDoWpisu() {
-        final DocumentListener listenerDlaBuilderaCeny = new DocumentListener()
+    private float dodajCeneZPola() {
+        String cenaStr = tF_DodajCeneDoWpisu.getText();
+        try {
+            cena = Float.parseFloat(cenaStr);
+            button_DodajCene.setEnabled(true);
+        } catch(NumberFormatException ex) {
+            button_DodajCene.setEnabled(false);
+        }
+        return cena;
+    }
+
+    private void dodajCeneDoWpisu() {
+        final DocumentListener listener = new DocumentListener()
         {
             public void changedUpdate(DocumentEvent e) { dopelnijBuildera(); }
             public void removeUpdate(DocumentEvent e) { dopelnijBuildera(); }
@@ -409,13 +418,13 @@ public class Makieta extends JFrame {
                 button_DodajCene.setEnabled(enabled);
             }
         };
-        tF_DodajCeneDoWpisu.getDocument().addDocumentListener(listenerDlaBuilderaCeny);
+        tF_DodajCeneDoWpisu.getDocument().addDocumentListener(listener);
         getRootPane().setDefaultButton(button_DodajCene);
         //wrocDoEdycji();
-        return cena;
     }
 
     private String przeniesListaProduktowDoZakupow() {
+        button_zListyProdDoZakupow.setEnabled(false); // TODO
         String zlaczenie = "";
         DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
         Nameable userObject = (Nameable) wybranaGalaz.getUserObject();
@@ -453,7 +462,6 @@ public class Makieta extends JFrame {
 
     private String dodajDoModeluListyZakupow(Object wybrany, Object powiazany) {
         RowItem pozycja = new RowItem(wybrany, powiazany);
-
         listaZakupowModel.addElement(pozycja);
         lista_Zakupow.setSelectedIndex(listaZakupowModel.getSize() - 1);
         button_UsunListaZakupow.setEnabled(true);
@@ -704,10 +712,17 @@ public class Makieta extends JFrame {
     {
         private Object produkt;
         private Object sklep;
+        private float cena;
 
         public RowItem(Object produkt, Object sklep) {
             this.produkt = produkt;
             this.sklep = sklep;
+        }
+
+        public RowItem(Object wybrany, Object powiazany, float cena) {
+            this.produkt = produkt;
+            this.sklep = sklep;
+            this.cena = cena;
         }
 
         public Object getProdukt() {
