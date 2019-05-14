@@ -100,28 +100,7 @@ public class Makieta extends JFrame {
         tF_DodajSklep.getDocument().addDocumentListener(listener);
         aktywujPrzyciki();
 
-        final DocumentListener listenerDlaBuilderaCeny = new DocumentListener()
-        {
-            public void changedUpdate(DocumentEvent e) { dopelnijBuildera(); }
-            public void removeUpdate(DocumentEvent e) { dopelnijBuildera(); }
-            public void insertUpdate(DocumentEvent e) { dopelnijBuildera(); }
-            private void dopelnijBuildera()
-            {
-                boolean enabled=false;
-                try
-                {
-                    cena=Float.parseFloat(tF_DodajCeneDoWpisu.getText());
-                    enabled=true;
-                }
-                catch(NumberFormatException e)
-                {
-                }
-                button_DodajCene.setEnabled(enabled);
-            }
-        };
-        tF_DodajCeneDoWpisu.getDocument().addDocumentListener(listenerDlaBuilderaCeny);
-        getRootPane().setDefaultButton(button_DodajCene);
-        wrocDoEdycji();
+        dodajCeneDoWpisu();
 
         JTree t = tr.getTree();
 
@@ -355,31 +334,7 @@ public class Makieta extends JFrame {
         button_zListyProdDoZakupow.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
-                Nameable userObject = (Nameable) wybranaGalaz.getUserObject();
-                String element = textFieldElementListyProduktow.getText();
-                userObject.setName(element);
-                int poziom = wybranaGalaz.getLevel();
-                if (poziom == 0 || poziom == 1) {
-                    button_zListyProdDoZakupow.setEnabled(false);
-                } else {
-                    if (poziom == 2) {
-                        button_zListyProdDoZakupow.setEnabled(true);
-                        Object wybranyProdukt = wybranaGalaz.getUserObject();
-                        TreeNode sklep = wybranaGalaz.getFirstChild();
-                        /*String produktSklep = (wybranyProdukt + "\t" + sklep);
-                        System.out.println(produktSklep);*/
-                        dodajDoModeluListyZakupow(wybranyProdukt, sklep);
-                    }
-                    if (poziom == 3) {
-                        button_zListyProdDoZakupow.setEnabled(true);
-                        Object wybranySklep = wybranaGalaz.getUserObject();
-                        TreeNode produkt = wybranaGalaz.getParent();
-                        /*String sklepProdukt = (produkt + "\t" + wybranySklep);
-                        System.out.println(sklepProdukt);*/
-                        dodajDoModeluListyZakupow(wybranySklep, produkt);
-                    }
-                }
+                przeniesListaProduktowDoZakupow();
                 saveDB();
                 aktywujPrzyciki();
 
@@ -405,11 +360,16 @@ public class Makieta extends JFrame {
         button_DodajCene.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                builderDlaCeny.add(cena);
-                wrocDoEdycji();
+                dodajCeneDoWpisu();
+/*                builderDlaCeny.add(cena);
+                wrocDoEdycji();*/
+                String przeniesListaProduktowDoZakupow = przeniesListaProduktowDoZakupow();
+                System.out.println(przeniesListaProduktowDoZakupow);
                 //lista_Zakupow.append(builderDlaCeny.toString()+"\n");
-                tA_ZakupyArea.append(builderDlaCeny.toString()+"\n");
-                wrocDoEdycji();
+                StringBuilder sb = new StringBuilder();
+                String append = String.valueOf(sb.append(przeniesListaProduktowDoZakupow).append(", ").append(cena));
+                tA_ZakupyArea.append(append);
+                //wrocDoEdycji();
             }
         });
         tF_DodajCeneDoWpisu.addActionListener(new ActionListener() {
@@ -429,13 +389,69 @@ public class Makieta extends JFrame {
         });
     }
 
+    private float dodajCeneDoWpisu() {
+        final DocumentListener listenerDlaBuilderaCeny = new DocumentListener()
+        {
+            public void changedUpdate(DocumentEvent e) { dopelnijBuildera(); }
+            public void removeUpdate(DocumentEvent e) { dopelnijBuildera(); }
+            public void insertUpdate(DocumentEvent e) { dopelnijBuildera(); }
+            private void dopelnijBuildera()
+            {
+                boolean enabled=false;
+                try
+                {
+                    cena=Float.parseFloat(tF_DodajCeneDoWpisu.getText());
+                    enabled=true;
+                }
+                catch(NumberFormatException e)
+                {
+                }
+                button_DodajCene.setEnabled(enabled);
+            }
+        };
+        tF_DodajCeneDoWpisu.getDocument().addDocumentListener(listenerDlaBuilderaCeny);
+        getRootPane().setDefaultButton(button_DodajCene);
+        //wrocDoEdycji();
+        return cena;
+    }
+
+    private String przeniesListaProduktowDoZakupow() {
+        String zlaczenie = "";
+        DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
+        Nameable userObject = (Nameable) wybranaGalaz.getUserObject();
+        String element = textFieldElementListyProduktow.getText();
+        userObject.setName(element);
+        int poziom = wybranaGalaz.getLevel();
+        if (poziom == 0 || poziom == 1) {
+            button_zListyProdDoZakupow.setEnabled(false);
+        } else {
+            if (poziom == 2) {
+                button_zListyProdDoZakupow.setEnabled(true);
+                Object wybranyProdukt = wybranaGalaz.getUserObject();
+                TreeNode sklep = wybranaGalaz.getFirstChild();
+                /*String produktSklep = (wybranyProdukt + "\t" + sklep);
+                System.out.println(produktSklep);*/
+                zlaczenie = dodajDoModeluListyZakupow(wybranyProdukt, sklep);
+            }
+            if (poziom == 3) {
+                button_zListyProdDoZakupow.setEnabled(true);
+                Object wybranySklep = wybranaGalaz.getUserObject();
+                TreeNode produkt = wybranaGalaz.getParent();
+                /*String sklepProdukt = (produkt + "\t" + wybranySklep);
+                System.out.println(sklepProdukt);*/
+                zlaczenie = dodajDoModeluListyZakupow(produkt, wybranySklep);
+            }
+        }
+        return zlaczenie;
+    }
+
     private void wrocDoEdycji() {
         tF_DodajCeneDoWpisu.selectAll();
         tF_DodajCeneDoWpisu.requestFocus();
     }
 
 
-    private String dodajDoModeluListyZakupow(Object wybrany, TreeNode powiazany) {
+    private String dodajDoModeluListyZakupow(Object wybrany, Object powiazany) {
         RowItem pozycja = new RowItem(wybrany, powiazany);
 
         listaZakupowModel.addElement(pozycja);
@@ -712,7 +728,7 @@ public class Makieta extends JFrame {
 
         @Override
         public String toString() {
-            return String.format("\t\t\t %s \t\t\t %s", produkt, sklep);
+            return String.format("%s          %s", produkt, sklep);
 
         }
 

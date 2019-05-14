@@ -20,7 +20,7 @@ public class BuilderDlaCeny {
     @Override public String toString()
     {
         if(zbior.size()<=0) return "null";
-        final StringBuilder sb=new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for(Float idvalue:zbior)
             sb.append(",").append(idvalue);
         return sb.toString();
