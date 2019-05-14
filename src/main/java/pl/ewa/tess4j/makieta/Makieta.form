@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="pl.ewa.tess4j.makieta.Makieta">
-  <grid id="27dc6" binding="panelGlowny" layout-manager="GridLayoutManager" row-count="17" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="panelGlowny" layout-manager="GridLayoutManager" row-count="16" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="21" y="20" width="1239" height="670"/>
+      <xy x="21" y="20" width="1239" height="679"/>
     </constraints>
     <properties>
       <preferredSize width="700" height="400"/>
@@ -20,7 +20,7 @@
       </component>
       <component id="e0460" class="javax.swing.JButton" binding="wczytajParagonButton" default-binding="true">
         <constraints>
-          <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Wczytaj paragon"/>
@@ -28,7 +28,7 @@
       </component>
       <component id="20753" class="javax.swing.JButton" binding="otwórzPlikButton" default-binding="true">
         <constraints>
-          <grid row="15" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Otwórz plik"/>
@@ -36,7 +36,7 @@
       </component>
       <component id="c6b1f" class="javax.swing.JButton" binding="zapiszPlikButton" default-binding="true">
         <constraints>
-          <grid row="16" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="15" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Zapisz plik"/>
@@ -44,7 +44,7 @@
       </component>
       <component id="2b74d" class="javax.swing.JTextField" binding="tF_DodajKategorie">
         <constraints>
-          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
+          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
@@ -54,7 +54,7 @@
       </component>
       <component id="ff0b2" class="javax.swing.JLabel" binding="labelWyswietlaniePatagonu">
         <constraints>
-          <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Tresc paragonu"/>
@@ -62,7 +62,7 @@
       </component>
       <component id="c4ae4" class="javax.swing.JTextField" binding="tF_DodajProdukt">
         <constraints>
-          <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
+          <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
@@ -72,7 +72,7 @@
       </component>
       <component id="65db2" class="javax.swing.JButton" binding="button_DodajKategorie">
         <constraints>
-          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <label value="&lt;&lt;"/>
@@ -82,7 +82,7 @@
       </component>
       <component id="49bf4" class="javax.swing.JButton" binding="button_DodajProdukt">
         <constraints>
-          <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <inheritsPopupMenu value="false"/>
@@ -92,7 +92,7 @@
       </component>
       <component id="62610" class="javax.swing.JLabel" binding="labelDodajKategorie">
         <constraints>
-          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <requestFocusEnabled value="true"/>
@@ -101,7 +101,7 @@
       </component>
       <component id="621f3" class="javax.swing.JLabel" binding="labelDodajPodKategorie">
         <constraints>
-          <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Dodaj nazwe produktu"/>
@@ -109,7 +109,7 @@
       </component>
       <component id="ddda5" class="javax.swing.JTextField" binding="tF_DodajSklep">
         <constraints>
-          <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
+          <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
@@ -119,7 +119,7 @@
       </component>
       <component id="9bc22" class="javax.swing.JLabel" binding="labelDodajSklep">
         <constraints>
-          <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Dodaj sklep"/>
@@ -127,7 +127,7 @@
       </component>
       <component id="e2f56" class="javax.swing.JButton" binding="button_DodajSklep">
         <constraints>
-          <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="&lt;&lt;"/>
@@ -135,31 +135,15 @@
       </component>
       <component id="62b67" class="javax.swing.JButton" binding="usunButton" default-binding="true">
         <constraints>
-          <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="x"/>
         </properties>
       </component>
-      <component id="cad38" class="javax.swing.JButton" binding="button_EdytujElement">
-        <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Edytuj"/>
-        </properties>
-      </component>
-      <component id="96fc2" class="javax.swing.JLabel" binding="labelEl">
-        <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Element"/>
-        </properties>
-      </component>
       <component id="af641" class="javax.swing.JTextArea" binding="textAreaSuma">
         <constraints>
-          <grid row="11" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="10" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
@@ -167,20 +151,9 @@
           <text value="Suma"/>
         </properties>
       </component>
-      <component id="67867" class="javax.swing.JTextField" binding="textFieldElementListyProduktow">
-        <constraints>
-          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <inheritsPopupMenu value="true"/>
-          <text value=""/>
-        </properties>
-      </component>
       <scrollpane id="950e8">
         <constraints>
-          <grid row="1" column="0" row-span="10" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="9" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -195,7 +168,7 @@
       </scrollpane>
       <scrollpane id="5437">
         <constraints>
-          <grid row="1" column="4" row-span="10" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="4" row-span="9" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -208,7 +181,7 @@
       </scrollpane>
       <scrollpane id="14f92">
         <constraints>
-          <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -224,7 +197,7 @@
       <grid id="8cefc" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="13" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="12" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -243,7 +216,7 @@
       </grid>
       <component id="51b17" class="javax.swing.JLabel" binding="labelNadPattern">
         <constraints>
-          <grid row="12" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="11" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Czesc paragonu dotyczaca produktow"/>
@@ -251,7 +224,7 @@
       </component>
       <component id="d1790" class="javax.swing.JLabel" binding="label_Message">
         <constraints>
-          <grid row="11" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="10" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Consolas" style="1"/>
@@ -269,15 +242,52 @@
       </component>
       <component id="43956" class="javax.swing.JButton" binding="zamknijButton" default-binding="true">
         <constraints>
-          <grid row="16" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="15" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Zamknij"/>
         </properties>
       </component>
+      <component id="ade49" class="javax.swing.JButton" binding="button_DodajSklepDoListyZakupow">
+        <constraints>
+          <grid row="9" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&gt;&gt;"/>
+          <verticalAlignment value="1"/>
+          <verticalTextPosition value="0"/>
+        </properties>
+      </component>
+      <component id="96fc2" class="javax.swing.JLabel" binding="labelEl">
+        <constraints>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Element"/>
+        </properties>
+      </component>
+      <component id="67867" class="javax.swing.JTextField" binding="textFieldElementListyProduktow">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <inheritsPopupMenu value="true"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="cad38" class="javax.swing.JButton" binding="button_EdytujElement">
+        <constraints>
+          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Edytuj"/>
+        </properties>
+      </component>
       <component id="766f1" class="javax.swing.JButton" binding="button_zListyProdDoZakupow">
         <constraints>
-          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <actionCommand value="zListyProdDoZakupow"/>
@@ -285,12 +295,12 @@
           <text value="&gt;&gt;"/>
         </properties>
       </component>
-      <component id="d19eb" class="javax.swing.JButton" binding="zapiszListeDoPlikuButton" default-binding="true">
+      <component id="e3908" class="javax.swing.JButton" binding="button_EdytujOrazProduktZListyZakupow">
         <constraints>
-          <grid row="11" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Zapisz liste do pliku"/>
+          <text value="Edytuj wpis z listy"/>
         </properties>
       </component>
       <component id="c6822" class="javax.swing.JButton" binding="button_UsunListaZakupow">
@@ -301,17 +311,33 @@
           <text value="Usun wpis z listy"/>
         </properties>
       </component>
-      <component id="e3908" class="javax.swing.JButton" binding="button_EdytujOrazProduktZListyZakupow">
+      <component id="d19eb" class="javax.swing.JButton" binding="zapiszListeDoPlikuButton" default-binding="true">
         <constraints>
-          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="10" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Edytuj wpis z listy"/>
+          <text value="Zapisz liste do pliku"/>
         </properties>
+      </component>
+      <component id="b1863" class="javax.swing.JButton" binding="button_DodajIlosc">
+        <constraints>
+          <grid row="8" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Dodaj ilosc"/>
+        </properties>
+      </component>
+      <component id="ce70b" class="javax.swing.JTextField" binding="tF_Dodajilosc">
+        <constraints>
+          <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
       </component>
       <component id="54094" class="javax.swing.JButton" binding="button_DodajCene">
         <constraints>
-          <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Dodaj cene do wpisu"/>
@@ -319,7 +345,7 @@
       </component>
       <component id="92afd" class="javax.swing.JTextField" binding="tF_DodajCeneDoWpisu">
         <constraints>
-          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="50" height="-1"/>
           </grid>
         </constraints>
