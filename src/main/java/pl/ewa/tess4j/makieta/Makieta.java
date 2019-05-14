@@ -70,18 +70,23 @@ public class Makieta extends JFrame {
     private JTextField tF_DodajKategorie;
     private JButton button_UsunListaZakupow;
     private JButton button_DodajCene;
+    private JTextField tF_DodajCeneDoWpisu;
+    private JTextArea tA_ZakupyArea;
     private JLabel selectedLabel;
 
     private DefaultListModel<RowItem> listaZakupowModel = new DefaultListModel<>();
 
     private Object produkt;
     private Object sklep;
+    private float cena = 0;
+    private BuilderDlaCeny builderDlaCeny = new BuilderDlaCeny();
 
     public Makieta() {
 
         lista_Zakupow.setModel(listaZakupowModel);
         button_UsunListaZakupow.setEnabled(false);
         button_zListyProdDoZakupow.setEnabled(false);
+//        button_DodajCene.setEnabled(false);
 
         DocumentListener listener=new DocumentListener()
         {
@@ -94,6 +99,29 @@ public class Makieta extends JFrame {
         tF_DodajProdukt.getDocument().addDocumentListener(listener);
         tF_DodajSklep.getDocument().addDocumentListener(listener);
         aktywujPrzyciki();
+
+        final DocumentListener listenerDlaBuilderaCeny = new DocumentListener()
+        {
+            public void changedUpdate(DocumentEvent e) { dopelnijBuildera(); }
+            public void removeUpdate(DocumentEvent e) { dopelnijBuildera(); }
+            public void insertUpdate(DocumentEvent e) { dopelnijBuildera(); }
+            private void dopelnijBuildera()
+            {
+                boolean enabled=false;
+                try
+                {
+                    cena=Float.parseFloat(tF_DodajCeneDoWpisu.getText());
+                    enabled=true;
+                }
+                catch(NumberFormatException e)
+                {
+                }
+                button_DodajCene.setEnabled(enabled);
+            }
+        };
+        tF_DodajCeneDoWpisu.getDocument().addDocumentListener(listenerDlaBuilderaCeny);
+        getRootPane().setDefaultButton(button_DodajCene);
+        wrocDoEdycji();
 
         JTree t = tr.getTree();
 
@@ -362,15 +390,11 @@ public class Makieta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int idx = lista_Zakupow.getSelectedIndex();
                 listaZakupowModel.removeElementAt(idx);
-
-
                 if(idx < listaZakupowModel.getSize()) {
                     lista_Zakupow.setSelectedIndex(idx);
                 } else {
                     lista_Zakupow.setSelectedIndex(idx-1);
                 }
-
-
                 if(listaZakupowModel.size() == 0) {
                     button_UsunListaZakupow.setEnabled(false);
                 } else {
@@ -378,14 +402,46 @@ public class Makieta extends JFrame {
                 }
             }
         });
+        button_DodajCene.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                builderDlaCeny.add(cena);
+                wrocDoEdycji();
+                //lista_Zakupow.append(builderDlaCeny.toString()+"\n");
+                tA_ZakupyArea.append(builderDlaCeny.toString()+"\n");
+                wrocDoEdycji();
+            }
+        });
+        tF_DodajCeneDoWpisu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cenaStr = tF_DodajCeneDoWpisu.getText();
+                try {
+                    cena = (float) Double.parseDouble(cenaStr);
+                    button_DodajCene.setEnabled(true);
+                    int wybranyIndeks = lista_Zakupow.getSelectedIndex();
+
+
+                } catch(NumberFormatException ex) {
+                    button_DodajCene.setEnabled(false);
+                }
+            }
+        });
     }
 
-    private void dodajDoModeluListyZakupow(Object wybrany, TreeNode powiazany) {
+    private void wrocDoEdycji() {
+        tF_DodajCeneDoWpisu.selectAll();
+        tF_DodajCeneDoWpisu.requestFocus();
+    }
+
+
+    private String dodajDoModeluListyZakupow(Object wybrany, TreeNode powiazany) {
         RowItem pozycja = new RowItem(wybrany, powiazany);
 
         listaZakupowModel.addElement(pozycja);
         lista_Zakupow.setSelectedIndex(listaZakupowModel.getSize() - 1);
         button_UsunListaZakupow.setEnabled(true);
+        return String.valueOf(pozycja);
     }
 
     private void dodajKategorieDoDrzewa(DefaultTreeModel model) {
