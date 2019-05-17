@@ -3,7 +3,11 @@ package pl.ewa.tess4j.makieta;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.io.FileUtils;
-import pl.ewa.tess4j.db.*;
+import pl.ewa.tess4j.db.DBService;
+import pl.ewa.tess4j.db.Kategoria;
+import pl.ewa.tess4j.db.Nameable;
+import pl.ewa.tess4j.db.Produkt;
+import pl.ewa.tess4j.db.Sklep;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -15,7 +19,11 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -92,11 +100,21 @@ public class Makieta extends JFrame {
         button_DodajCene.setEnabled(false);
         button_DodajIlosc.setEnabled(false);
 
-        DocumentListener listener=new DocumentListener()
-        {
-            @Override public void insertUpdate(DocumentEvent e) { aktywujPrzyciki(); }
-            @Override public void removeUpdate(DocumentEvent e) { aktywujPrzyciki(); }
-            @Override public void changedUpdate(DocumentEvent e) { aktywujPrzyciki(); }
+        DocumentListener listener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                aktywujPrzyciki();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                aktywujPrzyciki();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                aktywujPrzyciki();
+            }
         };
         textFieldElementListyProduktow.getDocument().addDocumentListener(listener);
         tF_DodajKategorie.getDocument().addDocumentListener(listener);
@@ -263,12 +281,14 @@ public class Makieta extends JFrame {
             @Override
             public void keyTyped(KeyEvent e) {
             }
+
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_DELETE) {
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
                     usunWybranyElementDrzewa(model);
                 }
             }
+
             @Override
             public void keyReleased(KeyEvent e) {
             }
@@ -359,12 +379,12 @@ public class Makieta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int idx = lista_Zakupow.getSelectedIndex();
                 listaZakupowModel.removeElementAt(idx);
-                if(idx < listaZakupowModel.getSize()) {
+                if (idx < listaZakupowModel.getSize()) {
                     lista_Zakupow.setSelectedIndex(idx);
                 } else {
-                    lista_Zakupow.setSelectedIndex(idx-1);
+                    lista_Zakupow.setSelectedIndex(idx - 1);
                 }
-                if(listaZakupowModel.size() == 0) {
+                if (listaZakupowModel.size() == 0) {
                     button_UsunListaZakupow.setEnabled(false);
                 } else {
                     button_UsunListaZakupow.setEnabled(true);
@@ -375,21 +395,19 @@ public class Makieta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dodajCeneDoWpisu();
-                String przeniesListaProduktowDoZakupow = przeniesListaProduktowDoZakupow();
-                System.out.println(przeniesListaProduktowDoZakupow);
-                //lista_Zakupow.append(builderDlaCeny.toString()+"\n");
-                StringBuilder sb = new StringBuilder();
-                String append = String.valueOf(sb.append(przeniesListaProduktowDoZakupow).append(",     ").append(cena).append("zl"));
-                //tA_ZakupyArea.append(append);
                 int wybrany = lista_Zakupow.getSelectedIndex();
-                listaZakupowModel.set(wybrany, append);
+                RowItem rowItem = (RowItem) listaZakupowModel.get(wybrany);
+                String cenaText = tF_DodajCeneDoWpisu.getText();
+                rowItem.setCena(Float.parseFloat(cenaText));
+                lista_Zakupow.setModel(listaZakupowModel);
 
-
-                if(wybrany < listaZakupowModel.getSize()) {
-                    lista_Zakupow.setSelectedIndex(wybrany);
-                } else {
-                    lista_Zakupow.setSelectedIndex(wybrany-1);
+                float suma = 0.0f;
+                for (int i = 0; i < listaZakupowModel.size(); i++) {
+                    RowItem row = (RowItem) listaZakupowModel.get(i);
+                    suma += row.getCena();
                 }
+                textAreaSuma.setText(suma + "");
+
 
                 tF_DodajCeneDoWpisu.setText("");
             }
@@ -413,15 +431,25 @@ public class Makieta extends JFrame {
                 listaZakupowModel.set(wybrany, append);
 
 
-                if(wybrany < listaZakupowModel.getSize()) {
+                if (wybrany < listaZakupowModel.getSize()) {
                     lista_Zakupow.setSelectedIndex(wybrany);
                 } else {
-                    lista_Zakupow.setSelectedIndex(wybrany-1);
+                    lista_Zakupow.setSelectedIndex(wybrany - 1);
                 }
 
                 tF_DodajCeneDoWpisu.setText("");
             }
         });
+    }
+
+    public static void main(String args[]) {
+        JFrame frame = new JFrame("Makieta");
+        frame.setContentPane(new Makieta().panelGlowny);
+        frame.setSize(1200, 700);
+        /*        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true)*/
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     private boolean sprawdzPoziom(int poziom) {
@@ -436,28 +464,32 @@ public class Makieta extends JFrame {
         try {
             cena = Float.parseFloat(cenaStr);
             button_DodajCene.setEnabled(true);
-        } catch(NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             button_DodajCene.setEnabled(false);
         }
         return cena;
     }
 
     private void dodajCeneDoWpisu() {
-        final DocumentListener listener = new DocumentListener()
-        {
-            public void changedUpdate(DocumentEvent e) { dopelnijBuildera(); }
-            public void removeUpdate(DocumentEvent e) { dopelnijBuildera(); }
-            public void insertUpdate(DocumentEvent e) { dopelnijBuildera(); }
-            private void dopelnijBuildera()
-            {
+        final DocumentListener listener = new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                dopelnijBuildera();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                dopelnijBuildera();
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                dopelnijBuildera();
+            }
+
+            private void dopelnijBuildera() {
                 boolean enabled = false;
-                try
-                {
+                try {
                     cena = Float.parseFloat(tF_DodajCeneDoWpisu.getText());
                     enabled = true;
-                }
-                catch(NumberFormatException e)
-                {
+                } catch (NumberFormatException e) {
                 }
                 button_DodajCene.setEnabled(enabled);
             }
@@ -468,21 +500,25 @@ public class Makieta extends JFrame {
     }
 
     private void dodajIloscDoWpisu() {
-        final DocumentListener listener = new DocumentListener()
-        {
-            public void changedUpdate(DocumentEvent e) { dodajIlosc(); }
-            public void removeUpdate(DocumentEvent e) { dodajIlosc(); }
-            public void insertUpdate(DocumentEvent e) { dodajIlosc(); }
-            private void dodajIlosc()
-            {
+        final DocumentListener listener = new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                dodajIlosc();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                dodajIlosc();
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                dodajIlosc();
+            }
+
+            private void dodajIlosc() {
                 boolean enabled = false;
-                try
-                {
+                try {
                     ilosc = tF_Dodajilosc.getText();
                     enabled = true;
-                }
-                catch(NumberFormatException e)
-                {
+                } catch (NumberFormatException e) {
                 }
                 button_DodajIlosc.setEnabled(enabled);
             }
@@ -496,9 +532,6 @@ public class Makieta extends JFrame {
         button_zListyProdDoZakupow.setEnabled(false); // TODO
         String zlaczenie = "";
         DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
-        Nameable userObject = (Nameable) wybranaGalaz.getUserObject();
-        String element = textFieldElementListyProduktow.getText();
-        userObject.setName(element);
         int poziom = wybranaGalaz.getLevel();
         if (poziom == 0 || poziom == 1) {
             button_zListyProdDoZakupow.setEnabled(false);
@@ -528,7 +561,6 @@ public class Makieta extends JFrame {
         tF_DodajCeneDoWpisu.requestFocus();
     }
 
-
     private String dodajDoModeluListyZakupow(Object wybrany, Object powiazany) {
         RowItem pozycja = new RowItem(wybrany, powiazany);
         listaZakupowModel.addElement(pozycja);
@@ -545,22 +577,15 @@ public class Makieta extends JFrame {
         } else {
             Object root = model.getRoot();
             /*if (wybranaGalaz.e) {*/
-                int poziom = wybranaGalaz.getLevel();
-                if (poziom == 0) {
-                        DB nadKategroriaDB = (DB) wybranaGalaz.getUserObject();
-                        Kategoria kategoriaDB = new Kategoria(tF_DodajKategorie.getText());
-                        nadKategroriaDB.addKategoria(kategoriaDB);
-                        wybranaGalaz.add(new DefaultMutableTreeNode(kategoriaDB));
-                        ((DefaultTreeModel) treeProduktow.getModel()).reload();
-                    tF_DodajKategorie.setText("");
-                        /*              Kategoria userObject = (Kategoria) galazGlowna.getUserObject();
-        Kategoria kategoria = new Kategoria(tF_DodajKategorie.getText());
-        if (!pobierzKategorie().equals("")) {
-            galazGlowna.add(new DefaultMutableTreeNode(tF_DodajKategorie.getText()));
-            model.reload();*/
-                } else {
-                    label_Message.setText("Kategoria musi byc dodana do galezi glownej");
-                }
+            int poziom = wybranaGalaz.getLevel();
+            if (poziom == 0) {
+                Kategoria kategoriaDB = new Kategoria(tF_DodajKategorie.getText());
+                wybranaGalaz.add(new DefaultMutableTreeNode(kategoriaDB));
+                ((DefaultTreeModel) treeProduktow.getModel()).reload();
+                tF_DodajKategorie.setText("");
+            } else {
+                label_Message.setText("Kategoria musi byc dodana do galezi glownej");
+            }
             /*} else {
                 label_Message.setText("Musisz wybrac galaz glowna");
             }*/
@@ -652,20 +677,9 @@ public class Makieta extends JFrame {
         aktywujPrzyciki();
     }
 
-    public static void main(String args[]) {
-        JFrame frame = new JFrame("Makieta");
-        frame.setContentPane(new Makieta().panelGlowny);
-        frame.setSize(1200, 700);
-        /*        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setUndecorated(true)*/
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-    }
-
-    public void aktywujPrzyciki()
-    {
+    public void aktywujPrzyciki() {
         String wartoscDoEdycji = textFieldElementListyProduktow.getText();
-        boolean maWartoscDoEdycji=(wartoscDoEdycji.length()>0);
+        boolean maWartoscDoEdycji = (wartoscDoEdycji.length() > 0);
         button_EdytujElement.setEnabled(maWartoscDoEdycji);
         button_zListyProdDoZakupow.setEnabled(maWartoscDoEdycji);
 
@@ -768,7 +782,7 @@ public class Makieta extends JFrame {
 
     private void edTextValueChanged(DocumentEvent e) {
         String text = textFieldElementListyProduktow.getText();
-        if(text == null || text.length() == 0) {
+        if (text == null || text.length() == 0) {
             //this.text = text;
             button_EdytujElement.setEnabled(false);
             return;
@@ -777,8 +791,7 @@ public class Makieta extends JFrame {
         }
     }
 
-    class RowItem
-    {
+    class RowItem {
         private Object produkt;
         private Object sklep;
         private float cena;
@@ -810,9 +823,17 @@ public class Makieta extends JFrame {
             this.sklep = sklep;
         }
 
+        public float getCena() {
+            return cena;
+        }
+
+        public void setCena(float cena) {
+            this.cena = cena;
+        }
+
         @Override
         public String toString() {
-            return String.format("%s          %s", produkt, sklep);
+            return String.format("%s          %s %s", produkt, sklep, cena);
 
         }
 
