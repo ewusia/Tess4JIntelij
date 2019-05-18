@@ -90,13 +90,13 @@ public class Makieta extends JFrame {
     private Object produkt;
     private Object sklep;
     private float cena = 0;
-    private String ilosc = "";
+    private float ilosc = 0;
 
     public Makieta() {
 
         lista_Zakupow.setModel(listaZakupowModel);
         button_UsunListaZakupow.setEnabled(false);
-        button_zListyProdDoZakupow.setEnabled(false);
+        //button_zListyProdDoZakupow.setEnabled(false);
         button_DodajCene.setEnabled(false);
         button_DodajIlosc.setEnabled(false);
 
@@ -364,11 +364,11 @@ public class Makieta extends JFrame {
                 public boolean uniqueName(String name)*/
                 DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
                 int poziom = wybranaGalaz.getLevel();
-                if (sprawdzPoziom(poziom)) {
-                    button_zListyProdDoZakupow.setEnabled(false);
+                if (poziom == 2 || poziom == 3) {
+                    button_zListyProdDoZakupow.setEnabled(true);
                     przeniesListaProduktowDoZakupow();
                 } else {
-                    button_zListyProdDoZakupow.setEnabled(false);
+                    button_zListyProdDoZakupow.setEnabled(true);
                 }
                 saveDB();
                 aktywujPrzyciki();
@@ -396,19 +396,16 @@ public class Makieta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 dodajCeneDoWpisu();
                 int wybrany = lista_Zakupow.getSelectedIndex();
-                RowItem rowItem = (RowItem) listaZakupowModel.get(wybrany);
-                String cenaText = tF_DodajCeneDoWpisu.getText();
-                rowItem.setCena(Float.parseFloat(cenaText));
-                lista_Zakupow.setModel(listaZakupowModel);
-
-                float suma = 0.0f;
-                for (int i = 0; i < listaZakupowModel.size(); i++) {
-                    RowItem row = (RowItem) listaZakupowModel.get(i);
-                    suma += row.getCena();
+                if (wybrany != -1) {
+                    RowItem rowItem = (RowItem) listaZakupowModel.get(wybrany);
+                    String cenaText = tF_DodajCeneDoWpisu.getText();
+                    rowItem.setCena(Float.parseFloat(cenaText));
+                    lista_Zakupow.setModel(listaZakupowModel);
+                } else {
+                    button_DodajCene.setEnabled(false);
+                    label_Message.setText("Musisz wybrac rekord");
                 }
-                textAreaSuma.setText(suma + "");
-
-
+                sumujCene();
                 tF_DodajCeneDoWpisu.setText("");
             }
         });
@@ -422,24 +419,37 @@ public class Makieta extends JFrame {
         button_DodajIlosc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dodajCeneDoWpisu();
-                String przeniesListaProduktowDoZakupow = przeniesListaProduktowDoZakupow();
-                System.out.println(przeniesListaProduktowDoZakupow);
-                StringBuilder sb = new StringBuilder();
-                String append = String.valueOf(sb.append(przeniesListaProduktowDoZakupow).append(",     ").append(cena).append("zl").append(",     ").append(ilosc));
+                dodajIloscDoWpisu();
                 int wybrany = lista_Zakupow.getSelectedIndex();
-                listaZakupowModel.set(wybrany, append);
-
-
-                if (wybrany < listaZakupowModel.getSize()) {
-                    lista_Zakupow.setSelectedIndex(wybrany);
+                if (wybrany != -1) {
+                    RowItem rowItem = (RowItem) listaZakupowModel.get(wybrany);
+                    String iloscText = tF_Dodajilosc.getText();
+                    rowItem.setIlosc(Float.parseFloat(iloscText));
+                    lista_Zakupow.setModel(listaZakupowModel);
                 } else {
-                    lista_Zakupow.setSelectedIndex(wybrany - 1);
+                    button_DodajCene.setEnabled(false);
+                    label_Message.setText("Musisz wybrac rekord");
                 }
-
-                tF_DodajCeneDoWpisu.setText("");
+                tF_Dodajilosc.setText("");
             }
         });
+
+        tF_Dodajilosc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dodajIloscDoWpisu();
+                tF_Dodajilosc.setText("");
+            }
+        });
+    }
+
+    private void sumujCene() {
+        float suma = 0.0f;
+        for (int i = 0; i < listaZakupowModel.size(); i++) {
+            RowItem row = (RowItem) listaZakupowModel.get(i);
+            suma += row.getCena();
+        }
+        textAreaSuma.setText(suma + "");
     }
 
     public static void main(String args[]) {
@@ -450,13 +460,6 @@ public class Makieta extends JFrame {
         frame.setUndecorated(true)*/
         frame.setVisible(true);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-    }
-
-    private boolean sprawdzPoziom(int poziom) {
-        if (poziom == 0 || poziom == 1) {
-            return false;
-        }
-        return true;
     }
 
     private float dodajCeneZPola() {
@@ -516,7 +519,7 @@ public class Makieta extends JFrame {
             private void dodajIlosc() {
                 boolean enabled = false;
                 try {
-                    ilosc = tF_Dodajilosc.getText();
+                    ilosc = Float.parseFloat(tF_Dodajilosc.getText());
                     enabled = true;
                 } catch (NumberFormatException e) {
                 }
@@ -529,7 +532,6 @@ public class Makieta extends JFrame {
     }
 
     private String przeniesListaProduktowDoZakupow() {
-        button_zListyProdDoZakupow.setEnabled(false); // TODO
         String zlaczenie = "";
         DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
         int poziom = wybranaGalaz.getLevel();
@@ -576,7 +578,6 @@ public class Makieta extends JFrame {
             label_Message.setText("Musisz wybrac galaz glowna, a nastepnie wpisac nazwe kategorii");
         } else {
             Object root = model.getRoot();
-            /*if (wybranaGalaz.e) {*/
             int poziom = wybranaGalaz.getLevel();
             if (poziom == 0) {
                 Kategoria kategoriaDB = new Kategoria(tF_DodajKategorie.getText());
@@ -586,9 +587,6 @@ public class Makieta extends JFrame {
             } else {
                 label_Message.setText("Kategoria musi byc dodana do galezi glownej");
             }
-            /*} else {
-                label_Message.setText("Musisz wybrac galaz glowna");
-            }*/
         }
         aktywujPrzyciki();
     }
@@ -681,7 +679,6 @@ public class Makieta extends JFrame {
         String wartoscDoEdycji = textFieldElementListyProduktow.getText();
         boolean maWartoscDoEdycji = (wartoscDoEdycji.length() > 0);
         button_EdytujElement.setEnabled(maWartoscDoEdycji);
-        button_zListyProdDoZakupow.setEnabled(maWartoscDoEdycji);
 
         String nazwaKategorii = pobierzKategorie();
         boolean maNazweKategorii = (nazwaKategorii.length() > 0);
@@ -795,18 +792,15 @@ public class Makieta extends JFrame {
         private Object produkt;
         private Object sklep;
         private float cena;
+        private float ilosc;
 
         public RowItem(Object produkt, Object sklep) {
             this.produkt = produkt;
             this.sklep = sklep;
-        }
+            cena = 0.0f;
+            ilosc = 0.0f;
 
-        public RowItem(Object wybrany, Object powiazany, float cena) {
-            this.produkt = produkt;
-            this.sklep = sklep;
-            this.cena = cena;
         }
-
         public Object getProdukt() {
             return produkt;
         }
@@ -831,9 +825,17 @@ public class Makieta extends JFrame {
             this.cena = cena;
         }
 
+        public float getIlosc() {
+            return ilosc;
+        }
+
+        public void setIlosc(float ilosc) {
+            this.ilosc = ilosc;
+        }
+
         @Override
         public String toString() {
-            return String.format("%s          %s %s", produkt, sklep, cena);
+            return String.format("%s,   %s,   %.2f%n,    %.1f%n", produkt, sklep, cena, ilosc);
 
         }
 
