@@ -69,7 +69,7 @@ public class Makieta extends JFrame {
 
     private Object produkt;
     private Object sklep;
-    private float cena = 0;
+    private double cena = 0;
     private int ilosc = 0;
 
     public Makieta() {
@@ -377,7 +377,7 @@ public class Makieta extends JFrame {
                 if (wybrany != -1) {
                     RowItem rowItem = (RowItem) listaZakupowModel.get(wybrany);
                     String cenaText = tF_DodajCeneDoWpisu.getText();
-                    rowItem.setCena(Float.parseFloat(cenaText));
+                    rowItem.setCena(Double.parseDouble(cenaText));
                     lista_Zakupow.setModel(listaZakupowModel);
                 } else {
                     button_DodajCene.setEnabled(false);
@@ -420,14 +420,25 @@ public class Makieta extends JFrame {
                 tF_Dodajilosc.setText("");
             }
         });
+        zapiszListeDoPlikuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String listaZakupow;
+                try {
+                    save();
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
     private void sumujCene() {
-        float suma = 0.0f;
+        double suma = 0.0f;
         for (int i = 0; i < listaZakupowModel.size(); i++) {
             RowItem row = (RowItem) listaZakupowModel.get(i);
-            float ilosc = row.getIlosc();
-            float cena = row.getCena();
+            double ilosc = row.getIlosc();
+            double cena = row.getCena();
             if (ilosc != 0) {
                 suma += row.getCena() * row.getIlosc();
             } else {
@@ -447,10 +458,10 @@ public class Makieta extends JFrame {
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    private float dodajCeneZPola() {
+    private double dodajCeneZPola() {
         String cenaStr = tF_DodajCeneDoWpisu.getText();
         try {
-            cena = Float.parseFloat(cenaStr);
+            cena = Double.parseDouble(cenaStr);
             button_DodajCene.setEnabled(true);
         } catch (NumberFormatException ex) {
             button_DodajCene.setEnabled(false);
@@ -475,7 +486,7 @@ public class Makieta extends JFrame {
             private void dopelnijBuildera() {
                 boolean enabled = false;
                 try {
-                    cena = Float.parseFloat(tF_DodajCeneDoWpisu.getText());
+                    cena = Double.parseDouble(tF_DodajCeneDoWpisu.getText());
                     enabled = true;
                 } catch (NumberFormatException e) {
                 }
@@ -776,15 +787,14 @@ public class Makieta extends JFrame {
     class RowItem {
         private Object produkt;
         private Object sklep;
-        private float cena;
+        private double cena;
         private int ilosc;
 
         public RowItem(Object produkt, Object sklep) {
             this.produkt = produkt;
             this.sklep = sklep;
+            ilosc = 1;
             cena = 0.0f;
-            ilosc = 0;
-
         }
 
         public Object getProdukt() {
@@ -803,11 +813,11 @@ public class Makieta extends JFrame {
             this.sklep = sklep;
         }
 
-        public float getCena() {
+        public double getCena() {
             return cena;
         }
 
-        public void setCena(float cena) {
+        public void setCena(double cena) {
             this.cena = cena;
         }
 
@@ -821,10 +831,20 @@ public class Makieta extends JFrame {
 
         @Override
         public String toString() {
-            return String.format("%s,   %s,   %.2f%n,    %d", produkt, sklep, cena, ilosc);
+            return String.format("%s,   %s,   %d,   %.2f zl", produkt, sklep, ilosc, cena);
 
         }
+    }
 
 
+    public void save() throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter(new FileOutputStream("listaZakupow.txt"));
+        ListModel model = lista_Zakupow.getModel();
+
+        for (int i = 0; i < listaZakupowModel.size(); i++) {
+            pw.println(model);
+            System.out.println("Zapisano do: " + pw);
+            pw.close();
+        }
     }
 }
