@@ -831,7 +831,8 @@ public class Makieta extends JFrame {
 
         @Override
         public String toString() {
-            return String.format("%s,   %s,   %d,   %.2f zl", produkt, sklep, ilosc, cena);
+            //return String.format("%s,   %s,   %d,   %.2f zl", produkt, sklep, ilosc, cena);
+            return String.format("\n" + produkt + ",  " + sklep + ",  " + ilosc + ",  " + cena + " zl");
 
         }
     }
@@ -843,7 +844,7 @@ public class Makieta extends JFrame {
 
         for (int i = 0; i < listaZakupowModel.size(); i++) {
             pw.println(model);
-            System.out.println("Zapisano do: " + pw);
+            System.out.println("Zapisano do: " + pw.toString());
             pw.close();
         }
     }
