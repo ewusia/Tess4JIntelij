@@ -3,34 +3,16 @@ package pl.ewa.tess4j.makieta;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.io.FileUtils;
-import pl.ewa.tess4j.db.DBService;
-import pl.ewa.tess4j.db.Kategoria;
-import pl.ewa.tess4j.db.Nameable;
-import pl.ewa.tess4j.db.Produkt;
-import pl.ewa.tess4j.db.Sklep;
+import pl.ewa.tess4j.db.*;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import javax.swing.tree.*;
+import java.awt.event.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,12 +65,12 @@ public class Makieta extends JFrame {
     private JTextArea tA_ZakupyArea;
     private JLabel selectedLabel;
 
-    private DefaultListModel<Object> listaZakupowModel = new DefaultListModel<>();
+    private DefaultListModel<RowItem> listaZakupowModel = new DefaultListModel<>();
 
     private Object produkt;
     private Object sklep;
     private float cena = 0;
-    private float ilosc = 0;
+    private int ilosc = 0;
 
     public Makieta() {
 
@@ -258,14 +240,14 @@ public class Makieta extends JFrame {
             }
         });
         // pozwala ENTEREM dokonac edycji
-        /*textFieldElementListyProduktow.addKeyListener(new KeyAdapter() {
+        textFieldElementListyProduktow.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     dodajProduktDoKategorii();
                 }
             }
-        });*/
+        });
 
         usunButton.addActionListener(new ActionListener() {
             @Override
@@ -381,6 +363,7 @@ public class Makieta extends JFrame {
                 }
                 if (listaZakupowModel.size() == 0) {
                     button_UsunListaZakupow.setEnabled(false);
+                    textAreaSuma.setText("");
                 } else {
                     button_UsunListaZakupow.setEnabled(true);
                 }
@@ -419,12 +402,13 @@ public class Makieta extends JFrame {
                 if (wybrany != -1) {
                     RowItem rowItem = (RowItem) listaZakupowModel.get(wybrany);
                     String iloscText = tF_Dodajilosc.getText();
-                    rowItem.setIlosc(Float.parseFloat(iloscText));
+                    rowItem.setIlosc(Integer.parseInt(iloscText));
                     lista_Zakupow.setModel(listaZakupowModel);
                 } else {
                     button_DodajCene.setEnabled(false);
                     label_Message.setText("Musisz wybrac rekord");
                 }
+                sumujCene();
                 tF_Dodajilosc.setText("");
             }
         });
@@ -442,9 +426,15 @@ public class Makieta extends JFrame {
         float suma = 0.0f;
         for (int i = 0; i < listaZakupowModel.size(); i++) {
             RowItem row = (RowItem) listaZakupowModel.get(i);
-            suma += row.getCena();
+            float ilosc = row.getIlosc();
+            float cena = row.getCena();
+            if (ilosc != 0) {
+                suma += row.getCena() * row.getIlosc();
+            } else {
+                suma += row.getCena();
+            }
         }
-        textAreaSuma.setText(suma + "");
+        textAreaSuma.setText("Przewidywana kwota zakupow: " + suma + " zl");
     }
 
     public static void main(String args[]) {
@@ -514,7 +504,7 @@ public class Makieta extends JFrame {
             private void dodajIlosc() {
                 boolean enabled = false;
                 try {
-                    ilosc = Float.parseFloat(tF_Dodajilosc.getText());
+                    ilosc = Integer.parseInt(tF_Dodajilosc.getText());
                     enabled = true;
                 } catch (NumberFormatException e) {
                 }
@@ -787,15 +777,16 @@ public class Makieta extends JFrame {
         private Object produkt;
         private Object sklep;
         private float cena;
-        private float ilosc;
+        private int ilosc;
 
         public RowItem(Object produkt, Object sklep) {
             this.produkt = produkt;
             this.sklep = sklep;
             cena = 0.0f;
-            ilosc = 0.0f;
+            ilosc = 0;
 
         }
+
         public Object getProdukt() {
             return produkt;
         }
@@ -820,17 +811,17 @@ public class Makieta extends JFrame {
             this.cena = cena;
         }
 
-        public float getIlosc() {
+        public int getIlosc() {
             return ilosc;
         }
 
-        public void setIlosc(float ilosc) {
+        public void setIlosc(int ilosc) {
             this.ilosc = ilosc;
         }
 
         @Override
         public String toString() {
-            return String.format("%s,   %s,   %.2f%n,    %.1f%n", produkt, sklep, cena, ilosc);
+            return String.format("%s,   %s,   %.2f%n,    %d", produkt, sklep, cena, ilosc);
 
         }
 
