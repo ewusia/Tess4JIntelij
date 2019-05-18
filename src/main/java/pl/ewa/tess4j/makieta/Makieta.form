@@ -248,16 +248,6 @@
           <text value="Zamknij"/>
         </properties>
       </component>
-      <component id="ade49" class="javax.swing.JButton" binding="button_DodajSklepDoListyZakupow">
-        <constraints>
-          <grid row="9" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="&gt;&gt;"/>
-          <verticalAlignment value="1"/>
-          <verticalTextPosition value="0"/>
-        </properties>
-      </component>
       <component id="96fc2" class="javax.swing.JLabel" binding="labelEl">
         <constraints>
           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -295,14 +285,6 @@
           <text value="&gt;&gt;"/>
         </properties>
       </component>
-      <component id="e3908" class="javax.swing.JButton" binding="button_EdytujOrazProduktZListyZakupow">
-        <constraints>
-          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Edytuj wpis z listy"/>
-        </properties>
-      </component>
       <component id="c6822" class="javax.swing.JButton" binding="button_UsunListaZakupow">
         <constraints>
           <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -324,7 +306,7 @@
           <grid row="8" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Dodaj ilosc"/>
+          <text value="Dodaj lub zaktualizuj ilosc"/>
         </properties>
       </component>
       <component id="ce70b" class="javax.swing.JTextField" binding="tF_Dodajilosc">
@@ -340,7 +322,7 @@
           <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Dodaj cene do wpisu"/>
+          <text value="Dodaj lub zaktualizuj cene"/>
         </properties>
       </component>
       <component id="92afd" class="javax.swing.JTextField" binding="tF_DodajCeneDoWpisu">

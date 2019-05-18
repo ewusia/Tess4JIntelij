@@ -71,7 +71,6 @@ public class Makieta extends JFrame {
     private JLabel labelDodajSklep;
     private JButton button_DodajSklep;
     private JButton button_EdytujElement;
-    private JButton button_EdytujOrazProduktZListyZakupow;
     private JButton zapiszListeDoPlikuButton;
     private JTextArea textAreaSuma;
     private JLabel label_Message;
@@ -80,7 +79,6 @@ public class Makieta extends JFrame {
     private JButton button_DodajCene;
     private JTextField tF_DodajCeneDoWpisu;
     private JButton button_DodajIlosc;
-    private JButton button_DodajSklepDoListyZakupow;
     private JTextField tF_Dodajilosc;
     private JTextArea tA_ZakupyArea;
     private JLabel selectedLabel;
@@ -96,7 +94,6 @@ public class Makieta extends JFrame {
 
         lista_Zakupow.setModel(listaZakupowModel);
         button_UsunListaZakupow.setEnabled(false);
-        //button_zListyProdDoZakupow.setEnabled(false);
         button_DodajCene.setEnabled(false);
         button_DodajIlosc.setEnabled(false);
 
@@ -359,16 +356,14 @@ public class Makieta extends JFrame {
         button_zListyProdDoZakupow.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-/*                if(name.equals(CommandModel.getElementAt(i).toString())) return false;
-                return true;
-                public boolean uniqueName(String name)*/
                 DefaultMutableTreeNode wybranaGalaz = (DefaultMutableTreeNode) treeProduktow.getSelectionPath().getLastPathComponent();
                 int poziom = wybranaGalaz.getLevel();
                 if (poziom == 2 || poziom == 3) {
-                    button_zListyProdDoZakupow.setEnabled(true);
+                    //button_zListyProdDoZakupow.setEnabled(true);
                     przeniesListaProduktowDoZakupow();
                 } else {
-                    button_zListyProdDoZakupow.setEnabled(true);
+                    label_Message.setText("Nie mozna przeniesc kategorii. Wybierz produkt lub sklep");
+                    //button_zListyProdDoZakupow.setEnabled(false);
                 }
                 saveDB();
                 aktywujPrzyciki();
