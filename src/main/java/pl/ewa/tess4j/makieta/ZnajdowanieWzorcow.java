@@ -29,17 +29,27 @@ public class ZnajdowanieWzorcow {
         return foundPattern;
     }
 
-    public boolean znajdzSprzed(String text) throws IOException {
+    public String znajdzSprzed(String text) throws IOException {
 
-        String foundPattern = null;
-        Pattern pattern = Pattern.compile("Sprzed");
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            foundPattern = matcher.group(0);
+        String sprzed = null;
+        Pattern patternSprzed = Pattern.compile("Sprzed");
+        Matcher matcherSprzed = patternSprzed.matcher(text);
+        if (matcherSprzed.find()) {
+            sprzed = matcherSprzed.group(0);
+            //foundPattern = "---";
             //System.out.println(foundPattern);
         } else {
             //System.out.println("Nie znaleziono wzorca");
         }
-        return true;
+        return sprzed;
+    }
+
+    public static void main(String[] args) {
+        String splited = new String("aaa bbb ccc");
+        String[] splitedArray = null;
+        splitedArray = splited.split(" ");
+        for (int i = 0 ; i < splitedArray.length ; i++) {
+            System.out.println(splitedArray [i]);
+        }
     }
 }

@@ -143,8 +143,8 @@ public class Makieta extends JFrame {
                     try {
                         jTextAreaListaProduktow.read(new FileReader(file.getAbsolutePath()), null);
                         // test dla pattern
-                        String str = FileUtils.readFileToString(file, "UTF-8");
-                        findPattern(str);
+                        /*String str = FileUtils.readFileToString(file, "UTF-8");
+                        findPattern(str);*/
                         // koniec testu dla pattern
                     } catch (IOException ex) {
                         System.out.println("Nie mogę otworzyć pliku: " + file.getAbsolutePath());
@@ -175,30 +175,6 @@ public class Makieta extends JFrame {
                         fw.write(fullText);
                         fw.close();
                         findPattern(fullText);
-
-                        FileReader fr = new FileReader("paragon.txt");
-                        BufferedReader br = new BufferedReader(fr);
-                        StringBuilder sb = new StringBuilder();
-                        String line = "";
-
-                        ZnajdowanieWzorcow zw = new ZnajdowanieWzorcow(fullText);
-                        String paragon = zw.znajdzParagon(fullText);
-                        ArrayList<String> list = new ArrayList<String>();
-
-                        boolean found = false;
-                        while ((line = br.readLine()) != null) {
-
-                            if (line.startsWith(paragon) || found) {
-                                list.add(line);
-                                found = true;
-                            }
-                        }
-                        for (String object : list) {
-                            jTextAreaListaZakupow.append("test\n");
-
-                            jTextAreaListaZakupow.append(object);
-                            //System.out.println(object);
-                        }
 
                     } catch (TesseractException ex) {
                         Logger.getLogger(Makieta.class.getName()).log(Level.SEVERE, null, ex);
@@ -705,38 +681,76 @@ public class Makieta extends JFrame {
 
     private void findPattern(String text) throws IOException {
 
-        String foundPattern = null;
+        FileWriter fw = new FileWriter("paragon.txt");
+        fw.write(text);
+        fw.close();
+
+        FileReader fr = new FileReader("paragon.txt");
+        BufferedReader br = new BufferedReader(fr);
+        StringBuilder sb = new StringBuilder();
+        String line = "";
+
         Pattern pattern = Pattern.compile("P[AH]R[AH]GON");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            foundPattern = matcher.group(0);
-
-            jTextAreaListaZakupow.append(foundPattern); //prints /{item}/
-            //czytaniePliku();
-
-            FileReader fr = new FileReader("paragon.txt");
-            BufferedReader br = new BufferedReader(fr);
-            StringBuilder sb = new StringBuilder();
-            String line = "";
+            String foundPattern = matcher.group(0);
 
             ArrayList<String> list = new ArrayList<String>();
 
             boolean found = false;
             while ((line = br.readLine()) != null) {
 
-                if (line.startsWith("PARAGON FISKALNY") || found) {
+                String paragonFiskalny = "PARAGON FISKALNY";
+                if (line.startsWith(paragonFiskalny) || found) {
                     list.add(line);
                     found = true;
                 }
             }
+            StringBuilder stringBuilderParagon = new StringBuilder();
             for (String object : list) {
                 System.out.println(object);
+                stringBuilderParagon.append(object);
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            list.set(0, ">");
+            for (String object : list) {
+                System.out.println(object);
+                stringBuilder.append(object);
+            }
+            String poPierwszymPatternie = stringBuilder.toString();
+            System.out.println("poPierwszymPatternie" + poPierwszymPatternie + "koniec");
+
+            Pattern patternSprzed = Pattern.compile("Sprzed");
+            Matcher matcherSprzed = patternSprzed.matcher(text);
+            String replace = "";
+            if (matcherSprzed.find()) {
+                String sprzed = matcherSprzed.group(0);
+                System.out.println("\n\n"+ sprzed);
+                replace = poPierwszymPatternie.replace(sprzed, "<");
+                System.out.println("zamana sprzed"+ replace);
             }
 
+            int start = replace.indexOf(">");
+            System.out.println(start);
+            int koniec = replace.indexOf("<");
+            System.out.println(koniec);
+            String substring = replace.substring(start+1, koniec);
+            System.out.println(substring);
+            jTextAreaListaZakupow.append(substring);
+
+            //String splited = new String("aaa bbb ccc");
+            String[] splitedArray = null;
+            splitedArray = substring.split("—");
+            for (int i = 0 ; i < splitedArray.length ; i++) {
+                System.out.println("*" + splitedArray [i]);
+            }
+
+
         } else {
-            jTextAreaListaZakupow.append("Nie znaleziono wzorca");
-        }
-        //return foundPattern;
+                jTextAreaListaZakupow.append("Nie znaleziono wzorca");
+            }
+            //return foundPattern;
+
     }
 
     public void zapiszOCRdoPliku(String text) {
