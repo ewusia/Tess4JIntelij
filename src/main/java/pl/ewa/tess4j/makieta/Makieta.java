@@ -161,28 +161,22 @@ public class Makieta extends JFrame {
                 if (odpowiedz == fc.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
                     Tesseract instance = new Tesseract();
-                    instance.setDatapath("C:\\Users\\ewa\\Desktop\\tesseract\\tessdata");
+                    instance.setDatapath("C:\\Users\\ewaam\\IdeaProjects\\tessdata");
                     instance.setLanguage("pol");
                     String fullText;
                     try {
                         fullText = instance.doOCR(file);
                         jTextAreaListaProduktow.append(fullText);
-                        //zapiszOCRdoPliku(fullText);
-                        //findPattern(fullText);
-                        //zapisDoPliku(fullText);
-                        //czytaniePliku();
                         FileWriter fw = new FileWriter("paragon.txt");
                         fw.write(fullText);
                         fw.close();
                         findPattern(fullText);
-
                     } catch (TesseractException ex) {
                         Logger.getLogger(Makieta.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
                         Logger.getLogger(Makieta.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-
             }
         });
         zapiszPlikButton.addActionListener(new ActionListener() {
@@ -720,7 +714,7 @@ public class Makieta extends JFrame {
             String poPierwszymPatternie = stringBuilder.toString();
             System.out.println("poPierwszymPatternie" + poPierwszymPatternie + "koniec");
 
-            Pattern patternSprzed = Pattern.compile("Sprzed");
+            Pattern patternSprzed = Pattern.compile("(?m)^Sprzed.*$");
             Matcher matcherSprzed = patternSprzed.matcher(text);
             String replace = "";
             if (matcherSprzed.find()) {
