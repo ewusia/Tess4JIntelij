@@ -20,6 +20,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Tess4J" />
+        <module name="Tess4JIntelij" />
       </profile>
     </annotationProcessing>
   </component>

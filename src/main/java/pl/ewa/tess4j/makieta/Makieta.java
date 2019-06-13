@@ -2,7 +2,7 @@ package pl.ewa.tess4j.makieta;
 
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import pl.ewa.tess4j.db.*;
 
 import javax.swing.*;
@@ -171,6 +171,40 @@ public class Makieta extends JFrame {
                         fw.write(fullText);
                         fw.close();
                         findPattern(fullText);
+                        JTree t = tr.getTree();
+                        TreeModel model1 = t.getModel();
+                        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model1.getRoot();
+                        FileReader fr = new FileReader("paragon.txt");
+                        BufferedReader br = new BufferedReader(fr);
+                        String yo = "Nap.Coca Cola 0,5L A 1x2,29 — 2,20A";
+                        String linia = "";
+                        while ((linia = br.readLine()) != null) {
+                            String finalLinia = linia;
+
+                            for (int r = 0; r < root.getChildCount(); r++) {
+                                DefaultMutableTreeNode kategoriaNode = (DefaultMutableTreeNode) root.getChildAt(r);
+                                Kategoria kategoria = (Kategoria) kategoriaNode.getUserObject();
+                                for (int p = 0; p < kategoriaNode.getChildCount(); p++) {
+                                    DefaultMutableTreeNode produktNode = (DefaultMutableTreeNode) kategoriaNode.getChildAt(p);
+                                    Produkt produkt = (Produkt) produktNode.getUserObject();
+                                    String produktZBazy = (String) produkt.toString();
+                                    if(StringUtils.containsIgnoreCase(finalLinia, produktZBazy)) {
+                                        Pattern pattern = Pattern.compile("\\d[xX]\\d[,]\\d{0,2}");
+                                        Matcher matcher = pattern.matcher(finalLinia);
+                                        boolean matches = matcher.matches();
+
+                                        if(matches) {
+                                            String find = matcher.group(0);
+                                            String []tab = find.split("x");
+                                            int ilosc = Integer.parseInt(tab[0]);
+                                            float cene = Float.parseFloat(tab[1]);
+                                            System.out.println(ilosc + cene);
+                                        }
+                                    }
+                                }
+                                //DBService.getDb().addKategoria(kategoria);
+                            }
+                        }
                     } catch (TesseractException ex) {
                         Logger.getLogger(Makieta.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -418,7 +452,7 @@ public class Makieta extends JFrame {
         textAreaSuma.setText("Przewidywana kwota zakupow: " + suma + " zl");
     }
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws IOException {
         JFrame frame = new JFrame("Makieta");
         frame.setContentPane(new Makieta().panelGlowny);
         frame.setSize(1200, 700);
@@ -426,6 +460,7 @@ public class Makieta extends JFrame {
         frame.setUndecorated(true)*/
         frame.setVisible(true);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //czytaniePliku();
     }
 
     private double dodajCeneZPola() {
@@ -684,12 +719,21 @@ public class Makieta extends JFrame {
         StringBuilder sb = new StringBuilder();
         String line = "";
 
-        Pattern pattern = Pattern.compile("P[AH]R[AH]GON");
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            String foundPattern = matcher.group(0);
+        String replace = "";
+        Pattern patternSprzed = Pattern.compile("(?m)^Sprzed.*$");
+        Matcher matcherSprzed = patternSprzed.matcher(text);
+        if (matcherSprzed.find()) {
+            String sprzed = matcherSprzed.group(0);
+            int index = text.indexOf(sprzed);
+            replace = text.replace(sprzed, "<");
 
-            ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<String>();
+        Pattern pattern = Pattern.compile("P[AH]R[AH]GON");
+        Matcher matcher = pattern.matcher(replace);
+        if (matcher.find()) {
+            String paragon = matcherSprzed.group(0);
+            int index2 = text.indexOf(paragon);
+            replace = text.replace(paragon, ">");
 
             boolean found = false;
             while ((line = br.readLine()) != null) {
@@ -700,51 +744,33 @@ public class Makieta extends JFrame {
                     found = true;
                 }
             }
-            StringBuilder stringBuilderParagon = new StringBuilder();
-            for (String object : list) {
-                System.out.println(object);
-                stringBuilderParagon.append(object);
-            }
-            StringBuilder stringBuilder = new StringBuilder();
+            System.out.println("koniec\n\n");
             list.set(0, ">");
-            for (String object : list) {
+            /*for (String object : list) {
                 System.out.println(object);
-                stringBuilder.append(object);
-            }
-            String poPierwszymPatternie = stringBuilder.toString();
-            System.out.println("poPierwszymPatternie" + poPierwszymPatternie + "koniec");
-
-            Pattern patternSprzed = Pattern.compile("(?m)^Sprzed.*$");
-            Matcher matcherSprzed = patternSprzed.matcher(text);
-            String replace = "";
-            if (matcherSprzed.find()) {
-                String sprzed = matcherSprzed.group(0);
-                System.out.println("\n\n"+ sprzed);
-                replace = poPierwszymPatternie.replace(sprzed, "<");
-                System.out.println("zamana sprzed"+ replace);
-            }
-
-            int start = replace.indexOf(">");
+            }*/
+            int start = replace.indexOf("PARAGON FISKALNY");
             System.out.println(start);
-            int koniec = replace.indexOf("<");
+            int koniec = replace.indexOf(">");
             System.out.println(koniec);
-            String substring = replace.substring(start+1, koniec);
+            String substring = replace.substring(start+17, koniec);
             System.out.println(substring);
+            zapisDoPliku(substring);
             jTextAreaListaZakupow.append(substring);
-
-            //String splited = new String("aaa bbb ccc");
-            String[] splitedArray = null;
-            splitedArray = substring.split("—");
-            for (int i = 0 ; i < splitedArray.length ; i++) {
-                System.out.println("*" + splitedArray [i]);
-            }
-
+        }
 
         } else {
-                jTextAreaListaZakupow.append("Nie znaleziono wzorca");
-            }
-            //return foundPattern;
+            jTextAreaListaZakupow.append("Nie znaleziono wzorca");
+        }
 
+
+
+/*        //String splited = new String("aaa bbb ccc");
+        String[] splitedArray = null;
+        splitedArray = substring.split("—");
+        for (int i = 0; i < splitedArray.length; i++) {
+            System.out.println("*" + splitedArray[i]);
+        }*/
     }
 
     public void zapiszOCRdoPliku(String text) {
@@ -766,20 +792,59 @@ public class Makieta extends JFrame {
         fw.close();
     }
 
-    private void czytaniePliku() throws FileNotFoundException, IOException {
-        FileReader fr = new FileReader("a.txt");
+/*    private static void czytaniePliku() throws FileNotFoundException, IOException {
+        FileReader fr = new FileReader("paragon.txt");
         BufferedReader br = new BufferedReader(fr);
-        String yo = "test";
-        String s;
-        while ((s = br.readLine()) != null) {
-            if (s.contains(yo)) {
-                jTextAreaListaZakupow.append(s + "\n");
+        String yo = "Nap.Coca Cola 0,5L A 1x2,29 — 2,20A";
+        String linia = "";
+        while ((linia = br.readLine()) != null) {
+           *//* if (linia.contains(yo)) {
+                System.out.println(linia + "\n");
             } else {
-                jTextAreaListaZakupow.append("brak");
-            }
-        }
+                System.out.println("brak");
+            }*//*
+            JTree t = tr.getTree();
 
-    }
+            DefaultTreeModel model = (DefaultTreeModel) t.getModel();
+
+            treeProduktow.setModel(model);
+
+            String finalLinia = linia;
+            treeProduktow.addTreeSelectionListener(e -> {
+                DBService.cleanDB();
+                TreeModel model1 = t.getModel();
+                *//*DefaultMutableTreeNode root = (DefaultMutableTreeNode) model1.getRoot();
+
+                for (int r = 0; r < root.getChildCount(); r++) {
+                    DefaultMutableTreeNode kategoriaNode = (DefaultMutableTreeNode) root.getChildAt(r);
+                    Kategoria kategoria = (Kategoria) kategoriaNode.getUserObject();
+                    for (int p = 0; p < kategoriaNode.getChildCount(); p++) {
+                        DefaultMutableTreeNode produktNode = (DefaultMutableTreeNode) kategoriaNode.getChildAt(p);
+                        Produkt produkt = (Produkt) produktNode.getUserObject();
+                        String produktZBazy = (String) produktNode.getUserObject();*//*
+
+                        *//*if(StringUtils.containsIgnoreCase(finalLinia, produktZBazy)) {
+                            Pattern pattern = Pattern.compile("d[xX]d[,]d{0,2}");
+                            Matcher matcher = pattern.matcher(finalLinia);
+                            boolean matches = matcher.matches();
+
+                            if(matches) {
+                                String find = matcher.group(0);
+                                String []tab = find.split("x");
+                                int ilosc = Integer.parseInt(tab[0]);
+                                float cene = Float.parseFloat(tab[1]);
+                            }
+                        }
+*//*
+                    }
+                    //DBService.getDb().addKategoria(kategoria);
+                }
+
+
+            });
+        }
+    }*/
+
 
     private void edTextValueChanged(DocumentEvent e) {
         String text = textFieldElementListyProduktow.getText();
