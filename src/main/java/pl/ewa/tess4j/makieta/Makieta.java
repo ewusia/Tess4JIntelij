@@ -13,6 +13,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -167,43 +168,24 @@ public class Makieta extends JFrame {
                     try {
                         fullText = instance.doOCR(file);
                         jTextAreaListaProduktow.append(fullText);
-                        FileWriter fw = new FileWriter("paragon.txt");
+                        String znalezionySklepWTekscieParagonu = ZnajdowanieWzorcow.znajdzSklep(fullText);
+                        FileWriter fw = new FileWriter("paragon2.txt", Charset.forName("UTF-8")); // 2 przy paragonie to chwilowe rozwiazanie
                         fw.write(fullText);
                         fw.close();
                         findPattern(fullText);
                         JTree t = tr.getTree();
                         TreeModel model1 = t.getModel();
                         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model1.getRoot();
-                        FileReader fr = new FileReader("paragon.txt");
+                        FileReader fr = new FileReader("paragon2.txt");
                         BufferedReader br = new BufferedReader(fr);
-                        String yo = "Nap.Coca Cola 0,5L A 1x2,29 — 2,20A";
-                        String linia = "";
+                        //String yo = "Nap.Coca Cola 0,5L A 1x2,29 — 2,20A";
+                        String linia;// = yo;
+
                         while ((linia = br.readLine()) != null) {
                             String finalLinia = linia;
 
-                            for (int r = 0; r < root.getChildCount(); r++) {
-                                DefaultMutableTreeNode kategoriaNode = (DefaultMutableTreeNode) root.getChildAt(r);
-                                Kategoria kategoria = (Kategoria) kategoriaNode.getUserObject();
-                                for (int p = 0; p < kategoriaNode.getChildCount(); p++) {
-                                    DefaultMutableTreeNode produktNode = (DefaultMutableTreeNode) kategoriaNode.getChildAt(p);
-                                    Produkt produkt = (Produkt) produktNode.getUserObject();
-                                    String produktZBazy = (String) produkt.toString();
-                                    if(StringUtils.containsIgnoreCase(finalLinia, produktZBazy)) {
-                                        Pattern pattern = Pattern.compile("\\d[xX]\\d[,]\\d{0,2}");
-                                        Matcher matcher = pattern.matcher(finalLinia);
-                                        boolean matches = matcher.matches();
-
-                                        if(matches) {
-                                            String find = matcher.group(0);
-                                            String []tab = find.split("x");
-                                            int ilosc = Integer.parseInt(tab[0]);
-                                            float cene = Float.parseFloat(tab[1]);
-                                            System.out.println(ilosc + cene);
-                                        }
-                                    }
-                                }
-                                //DBService.getDb().addKategoria(kategoria);
-                            }
+                            //znajdowanieCenIlosci(root, finalLinia);
+                            znajdowanieSklepu(root, znalezionySklepWTekscieParagonu);
                         }
                     } catch (TesseractException ex) {
                         Logger.getLogger(Makieta.class.getName()).log(Level.SEVERE, null, ex);
@@ -436,6 +418,65 @@ public class Makieta extends JFrame {
             }
         });
     }
+
+    private void znajdowanieCenIlosci(DefaultMutableTreeNode root, String finalLinia) {
+        for (int r = 0; r < root.getChildCount(); r++) {
+            DefaultMutableTreeNode kategoriaNode = (DefaultMutableTreeNode) root.getChildAt(r);
+            Kategoria kategoria = (Kategoria) kategoriaNode.getUserObject();
+            for (int p = 0; p < kategoriaNode.getChildCount(); p++) {
+                DefaultMutableTreeNode produktNode = (DefaultMutableTreeNode) kategoriaNode.getChildAt(p);
+                Produkt produkt = (Produkt) produktNode.getUserObject();
+                String produktZBazy = (String) produkt.toString();
+                if (StringUtils.containsIgnoreCase(finalLinia, produktZBazy)) {
+                    //String finalLinia2 = "Nap.Coca Cola 0,5L A 1x2.29 — 2,20A";
+                    //finalLinia.replace;
+                    Pattern pattern = Pattern.compile("\\d[xX]\\d[.]\\d{0,2}");
+                    Matcher matcher = pattern.matcher(finalLinia.replace(",", "."));
+                    boolean matches = matcher.find();
+
+                    if (matches) {
+                        String find = matcher.group(0);
+                        String[] tab = find.split("x");
+                        int ilosc = Integer.parseInt(tab[0]);
+                        float cene = Float.parseFloat(tab[1]);
+                        System.out.println("ilosc" + ilosc);
+                        System.out.println("cene" + cene);
+                    }
+                }
+            }
+
+            //DBService.getDb().addKategoria(kategoria);
+        }
+    }
+
+    private void znajdowanieSklepu(DefaultMutableTreeNode root, String znalezionysklepZTekstuParagonu) {
+        for (int r = 0; r < root.getChildCount(); r++) {
+            DefaultMutableTreeNode kategoriaNode = (DefaultMutableTreeNode) root.getChildAt(r);
+            Kategoria kategoria = (Kategoria) kategoriaNode.getUserObject();
+            for (int p = 0; p < kategoriaNode.getChildCount(); p++) {
+                DefaultMutableTreeNode produktNode = (DefaultMutableTreeNode) kategoriaNode.getChildAt(p);
+                Produkt produkt = (Produkt) produktNode.getUserObject();
+                for (int s = 0; s < produktNode.getChildCount(); s++) {
+                    DefaultMutableTreeNode sklepNode = (DefaultMutableTreeNode) produktNode.getChildAt(s);
+                    Sklep sklep = (Sklep) sklepNode.getUserObject();
+                    if (!sklep.equals(znalezionysklepZTekstuParagonu)) {
+                        //System.out.println("trzeba dodac sklep " + znalezionysklepZTekstuParagonu);
+                        //System.out.println("trzeba dodac sklep object" + sklep2);
+                        for (int i = 0; i < produktNode.getChildCount(); i++) {
+                            produkt.addSklep(new Sklep((String) znalezionysklepZTekstuParagonu));
+                        }
+                    } else {
+                        System.out.println("wyjdz");
+                    }
+                }
+
+            }
+            DBService.getDb().getKategorie;
+        }
+
+        //DBService.getDb().addKategoria(kategoria);
+    }
+
 
     private void sumujCene() {
         double suma = 0.0f;
@@ -727,37 +768,37 @@ public class Makieta extends JFrame {
             int index = text.indexOf(sprzed);
             replace = text.replace(sprzed, "<");
 
-        ArrayList<String> list = new ArrayList<String>();
-        Pattern pattern = Pattern.compile("P[AH]R[AH]GON");
-        Matcher matcher = pattern.matcher(replace);
-        if (matcher.find()) {
-            String paragon = matcherSprzed.group(0);
-            int index2 = text.indexOf(paragon);
-            replace = text.replace(paragon, ">");
+            ArrayList<String> list = new ArrayList<String>();
+            Pattern pattern = Pattern.compile("P[AH]R[AH]GON");
+            Matcher matcher = pattern.matcher(replace);
+            if (matcher.find()) {
+                String paragon = matcherSprzed.group(0);
+                int index2 = text.indexOf(paragon);
+                replace = text.replace(paragon, ">");
 
-            boolean found = false;
-            while ((line = br.readLine()) != null) {
+                boolean found = false;
+                while ((line = br.readLine()) != null) {
 
-                String paragonFiskalny = "PARAGON FISKALNY";
-                if (line.startsWith(paragonFiskalny) || found) {
-                    list.add(line);
-                    found = true;
+                    String paragonFiskalny = "PARAGON FISKALNY";
+                    if (line.startsWith(paragonFiskalny) || found) {
+                        list.add(line);
+                        found = true;
+                    }
                 }
-            }
-            System.out.println("koniec\n\n");
-            list.set(0, ">");
+                System.out.println("koniec\n\n");
+                list.set(0, ">");
             /*for (String object : list) {
                 System.out.println(object);
             }*/
-            int start = replace.indexOf("PARAGON FISKALNY");
-            System.out.println(start);
-            int koniec = replace.indexOf(">");
-            System.out.println(koniec);
-            String substring = replace.substring(start+17, koniec);
-            System.out.println(substring);
-            zapisDoPliku(substring);
-            jTextAreaListaZakupow.append(substring);
-        }
+                int start = replace.indexOf("PARAGON FISKALNY");
+                System.out.println(start);
+                int koniec = replace.indexOf(">");
+                System.out.println(koniec);
+                String substring = replace.substring(start + 17, koniec);
+                System.out.println(substring);
+                zapisDoPliku(substring);
+                jTextAreaListaZakupow.append(substring);
+            }
 
         } else {
             jTextAreaListaZakupow.append("Nie znaleziono wzorca");
@@ -791,60 +832,6 @@ public class Makieta extends JFrame {
         fw.write(fullText);
         fw.close();
     }
-
-/*    private static void czytaniePliku() throws FileNotFoundException, IOException {
-        FileReader fr = new FileReader("paragon.txt");
-        BufferedReader br = new BufferedReader(fr);
-        String yo = "Nap.Coca Cola 0,5L A 1x2,29 — 2,20A";
-        String linia = "";
-        while ((linia = br.readLine()) != null) {
-           *//* if (linia.contains(yo)) {
-                System.out.println(linia + "\n");
-            } else {
-                System.out.println("brak");
-            }*//*
-            JTree t = tr.getTree();
-
-            DefaultTreeModel model = (DefaultTreeModel) t.getModel();
-
-            treeProduktow.setModel(model);
-
-            String finalLinia = linia;
-            treeProduktow.addTreeSelectionListener(e -> {
-                DBService.cleanDB();
-                TreeModel model1 = t.getModel();
-                *//*DefaultMutableTreeNode root = (DefaultMutableTreeNode) model1.getRoot();
-
-                for (int r = 0; r < root.getChildCount(); r++) {
-                    DefaultMutableTreeNode kategoriaNode = (DefaultMutableTreeNode) root.getChildAt(r);
-                    Kategoria kategoria = (Kategoria) kategoriaNode.getUserObject();
-                    for (int p = 0; p < kategoriaNode.getChildCount(); p++) {
-                        DefaultMutableTreeNode produktNode = (DefaultMutableTreeNode) kategoriaNode.getChildAt(p);
-                        Produkt produkt = (Produkt) produktNode.getUserObject();
-                        String produktZBazy = (String) produktNode.getUserObject();*//*
-
-                        *//*if(StringUtils.containsIgnoreCase(finalLinia, produktZBazy)) {
-                            Pattern pattern = Pattern.compile("d[xX]d[,]d{0,2}");
-                            Matcher matcher = pattern.matcher(finalLinia);
-                            boolean matches = matcher.matches();
-
-                            if(matches) {
-                                String find = matcher.group(0);
-                                String []tab = find.split("x");
-                                int ilosc = Integer.parseInt(tab[0]);
-                                float cene = Float.parseFloat(tab[1]);
-                            }
-                        }
-*//*
-                    }
-                    //DBService.getDb().addKategoria(kategoria);
-                }
-
-
-            });
-        }
-    }*/
-
 
     private void edTextValueChanged(DocumentEvent e) {
         String text = textFieldElementListyProduktow.getText();
