@@ -2,6 +2,7 @@ package pl.ewa.tess4j.db;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Produkt implements Nameable {
 
@@ -33,6 +34,10 @@ public class Produkt implements Nameable {
 
     public List<Sklep> getSklepy() {
         return sklepy;
+    }
+
+    public Optional<Sklep> getSklep(String sklep) {
+        return this.sklepy.stream().filter(s -> s.getName().equals(sklep)).findFirst();
     }
 
     public void setSklepy(List<Sklep> sklepy) {

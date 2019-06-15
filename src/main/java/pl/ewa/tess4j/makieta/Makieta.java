@@ -32,8 +32,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -181,16 +181,14 @@ public class Makieta extends JFrame {
                 if (odpowiedz == fc.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
                     Tesseract instance = new Tesseract();
-                    instance.setDatapath("C:\\Users\\ewaam\\IdeaProjects\\tessdata");
+                    instance.setDatapath("/Users/adamambrozek/Downloads/pol.traineddata");
                     instance.setLanguage("pol");
                     String fullText;
                     try {
                         fullText = instance.doOCR(file);
                         jTextAreaListaProduktow.append(fullText);
                         String znalezionySklepWTekscieParagonu = ZnajdowanieWzorcow.znajdzSklep(fullText);
-                        FileWriter fw = new FileWriter("paragon2.txt", Charset.forName("UTF-8")); // 2 przy paragonie to chwilowe rozwiazanie
-                        fw.write(fullText);
-                        fw.close();
+
                         findPattern(fullText);
                         JTree t = tr.getTree();
                         TreeModel model1 = t.getModel();
@@ -200,11 +198,11 @@ public class Makieta extends JFrame {
                         //String yo = "Nap.Coca Cola 0,5L A 1x2,29 — 2,20A";
                         String linia;// = yo;
 
+                        znajdowanieSklepu(root, znalezionySklepWTekscieParagonu);
                         while ((linia = br.readLine()) != null) {
                             String finalLinia = linia;
 
-                            //znajdowanieCenIlosci(root, finalLinia);
-                            znajdowanieSklepu(root, znalezionySklepWTekscieParagonu);
+                            znajdowanieCenIlosci(root, finalLinia, znalezionySklepWTekscieParagonu);
                         }
                     } catch (TesseractException ex) {
                         Logger.getLogger(Makieta.class.getName()).log(Level.SEVERE, null, ex);
@@ -438,7 +436,18 @@ public class Makieta extends JFrame {
         });
     }
 
-    private void znajdowanieCenIlosci(DefaultMutableTreeNode root, String finalLinia) {
+    public static void main(String args[]) throws IOException {
+        JFrame frame = new JFrame("Makieta");
+        frame.setContentPane(new Makieta().panelGlowny);
+        frame.setSize(1200, 700);
+        /*        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true)*/
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //czytaniePliku();
+    }
+
+    private void znajdowanieCenIlosci(DefaultMutableTreeNode root, String finalLinia, String znalezionySklepWTekscieParagonu) {
         for (int r = 0; r < root.getChildCount(); r++) {
             DefaultMutableTreeNode kategoriaNode = (DefaultMutableTreeNode) root.getChildAt(r);
             Kategoria kategoria = (Kategoria) kategoriaNode.getUserObject();
@@ -458,13 +467,20 @@ public class Makieta extends JFrame {
                         String[] tab = find.split("x");
                         int ilosc = Integer.parseInt(tab[0]);
                         float cene = Float.parseFloat(tab[1]);
-                        System.out.println("ilosc" + ilosc);
-                        System.out.println("cene" + cene);
+                        Optional<Sklep> sklep = produkt.getSklep(znalezionySklepWTekscieParagonu);
+
+                        if (!sklep.isPresent()) {
+                            produkt.addSklep(new Sklep(znalezionySklepWTekscieParagonu));
+                        }
+                        produkt.setCena(cene);
+
+                        DBService.getDb().getKategoria(kategoria).addProdukt(produkt);
+                        ((DefaultTreeModel) treeProduktow.getModel()).reload();
+
                     }
                 }
             }
 
-            //DBService.getDb().addKategoria(kategoria);
         }
     }
 
@@ -489,13 +505,10 @@ public class Makieta extends JFrame {
                     }
                 }
 
-                DBService.getDb().getKategoria(kategoria).addProdukt(produkt);
             }
         }
 
-        //DBService.getDb().addKategoria(kategoria);
     }
-
 
     private void sumujCene() {
         double suma = 0.0f;
@@ -510,17 +523,6 @@ public class Makieta extends JFrame {
             }
         }
         textAreaSuma.setText("Przewidywana kwota zakupow: " + suma + " zl");
-    }
-
-    public static void main(String args[]) throws IOException {
-        JFrame frame = new JFrame("Makieta");
-        frame.setContentPane(new Makieta().panelGlowny);
-        frame.setSize(1200, 700);
-        /*        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setUndecorated(true)*/
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //czytaniePliku();
     }
 
     private double dodajCeneZPola() {
@@ -863,6 +865,17 @@ public class Makieta extends JFrame {
         }
     }
 
+    public void save() throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter(new FileOutputStream("listaZakupow.txt"));
+        ListModel model = lista_Zakupow.getModel();
+
+        for (int i = 0; i < listaZakupowModel.size(); i++) {
+            pw.println(model);
+            System.out.println("Zapisano do: " + pw.toString());
+            pw.close();
+        }
+    }
+
     class RowItem {
         private Object produkt;
         private Object sklep;
@@ -913,18 +926,6 @@ public class Makieta extends JFrame {
             //return String.format("%s,   %s,   %d,   %.2f zl", produkt, sklep, ilosc, cena);
             return String.format("\n" + produkt + ",  " + sklep + ",  " + ilosc + ",  " + cena + " zl");
 
-        }
-    }
-
-
-    public void save() throws FileNotFoundException {
-        PrintWriter pw = new PrintWriter(new FileOutputStream("listaZakupow.txt"));
-        ListModel model = lista_Zakupow.getModel();
-
-        for (int i = 0; i < listaZakupowModel.size(); i++) {
-            pw.println(model);
-            System.out.println("Zapisano do: " + pw.toString());
-            pw.close();
         }
     }
 }
