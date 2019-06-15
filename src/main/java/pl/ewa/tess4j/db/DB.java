@@ -28,6 +28,10 @@ public class DB implements Nameable{
         return kategorie;
     }
 
+    public Kategoria getKategoria(Kategoria kategoria) {
+        return kategorie.stream().filter(k -> k.equals(kategoria)).findFirst().get();
+    }
+
     public void setKategorie(List<Kategoria> kategorie) {
         this.kategorie = kategorie;
     }

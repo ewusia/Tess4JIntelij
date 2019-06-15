@@ -3,16 +3,35 @@ package pl.ewa.tess4j.makieta;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.apache.commons.lang3.StringUtils;
-import pl.ewa.tess4j.db.*;
+import pl.ewa.tess4j.db.DBService;
+import pl.ewa.tess4j.db.Kategoria;
+import pl.ewa.tess4j.db.Nameable;
+import pl.ewa.tess4j.db.Produkt;
+import pl.ewa.tess4j.db.Sklep;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.*;
-import java.awt.event.*;
-import java.io.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -470,8 +489,8 @@ public class Makieta extends JFrame {
                     }
                 }
 
+                DBService.getDb().getKategoria(kategoria).addProdukt(produkt);
             }
-            DBService.getDb().getKategorie;
         }
 
         //DBService.getDb().addKategoria(kategoria);
